@@ -34,4 +34,3 @@ struct Todo: Identifiable {
     var hasDelete : Bool=false
 }
 
-

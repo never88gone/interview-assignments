@@ -20,7 +20,9 @@ struct ContentView: View {
     func deleteRow(at offsets:IndexSet) {
         todoManager.todos.remove(atOffsets: offsets)
     }
-    
+    func moveItem(from source: IndexSet, to destination: Int) {
+        todoManager.todos.move(fromOffsets: source, toOffset: destination)
+    }
     var body: some View {
         let todoManager = TodoManager()
         todoManager.addTask(info: "desc1",title: "haha" )
@@ -30,6 +32,7 @@ struct ContentView: View {
         todoManager.addTask(info: "desc2")
         todoManager.addTask(info: "desc2")
         todoManager.curTodo=todoManager.todos[0]
+
         let keys = [String](todoManager.getShowTodos().keys)
         return  NavigationView{
             VStack {
@@ -37,10 +40,10 @@ struct ContentView: View {
                     ForEach(keys, id: \.self) { oneKey in
                         Section(header: Text(oneKey).font(.title))
                         {
-                            let todolist = [Todo](todoManager.getShowTodos()[oneKey] ?? [Todo]())
+                            var todolist = [Todo](todoManager.getShowTodos()[oneKey] ?? [Todo]())
                             ForEach(todolist) { oneTodo in
                                 ToDoTVCell(todo:oneTodo)
-                            }.onDelete(perform: deleteRow)
+                            }.onDelete(perform: deleteRow).onMove(perform: moveItem)
                         }
                     }
 
