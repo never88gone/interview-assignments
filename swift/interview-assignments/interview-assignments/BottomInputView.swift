@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BottomInputView: View {
     @State  var todo:Todo = Todo(info: "",title :"")
-    @State private var inputTipText = "add new..."
+    @State private var inputTipText = ""
     @State private var  showingActionSheet=false
     @State private var  defualtTypeStr = ""
     var body: some View {
@@ -28,7 +28,9 @@ struct BottomInputView: View {
         buttons.append(cancelButton)
         
         return HStack {
-            TextEditor(text: $inputTipText).background(Color.white).frame(maxWidth: .infinity, maxHeight: 44).fixedSize(horizontal: false, vertical: true).foregroundColor(Color("ngtextback")).padding(EdgeInsets(top:5, leading:10, bottom: 5, trailing: 5)).cornerRadius(10)
+            TextField("add new...", text:$inputTipText ).background(Color.white).frame(maxWidth: .infinity, maxHeight: 44).fixedSize(horizontal: false, vertical: true).foregroundColor(Color("ngtextback")).padding(EdgeInsets(top:5, leading:10, bottom: 5, trailing: 5)).cornerRadius(10).onSubmit {
+                TodoManager.shared.addTask(info: self.inputTipText,title:self.defualtTypeStr)
+            }
                 
             if (TodoManager.shared.todoGroups.count>=0){
                 Button(action: {

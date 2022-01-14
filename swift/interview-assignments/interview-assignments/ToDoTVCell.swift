@@ -35,7 +35,7 @@ struct ToDoTVCell: View {
                 }.frame(maxWidth: .infinity,maxHeight: .infinity).background(Color.init(red: 0, green: 0, blue: 0, opacity: 0.1))
             }
 
-        }.frame(minHeight:40,maxHeight: .infinity).background(Color.white).padding(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing:15)).cornerRadius(5.0)
+        }.frame(minHeight:40,maxHeight: .infinity).background(Color.white).cornerRadius(10.0).padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing:10))
     }
 }
 

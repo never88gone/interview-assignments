@@ -23,12 +23,13 @@ struct ContentView: View {
       
     }
     init(){
+        UITableView.appearance().separatorColor = UIColor.clear
         TodoManager.shared.addTask(info: "desc1",title: "haha" )
         TodoManager.shared.addTask(info: "desc2",title: "haha" )
         TodoManager.shared.addTask(info: "desc3",title: "haha1" )
         TodoManager.shared.addTask(info: "desc4",title: "haha1" )
         TodoManager.shared.addTask(info: "desc5",title: "haha1" )
-        TodoManager.shared.addTask(info: "desc6",title: "haha2" )
+        TodoManager.shared.addTask(info: "desc6",title: "haha1" )
     }
     var body: some View {
         return  NavigationView{
@@ -58,12 +59,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        TodoManager.shared.addTask(info: "desc1",title: "haha" )
-        TodoManager.shared.addTask(info: "desc2",title: "haha" )
-        TodoManager.shared.addTask(info: "desc3",title: "haha1" )
-        TodoManager.shared.addTask(info: "desc4",title: "haha1" )
-        TodoManager.shared.addTask(info: "desc5",title: "haha1" )
-        TodoManager.shared.addTask(info: "desc6",title: "haha1" )
         return ContentView().previewDevice("iPhone 13")
     }
 }
