@@ -40,7 +40,7 @@ struct ContentView: View {
                     ForEach(keys, id: \.self) { oneKey in
                         Section(header: Text(oneKey).font(.title))
                         {
-                            var todolist = [Todo](todoManager.getShowTodos()[oneKey] ?? [Todo]())
+                            let todolist = [Todo](todoManager.getShowTodos()[oneKey] ?? [Todo]())
                             ForEach(todolist) { oneTodo in
                                 ToDoTVCell(todo:oneTodo)
                             }.onDelete(perform: deleteRow).onMove(perform: moveItem)
@@ -48,12 +48,12 @@ struct ContentView: View {
                     }
 
                 }.listStyle(GroupedListStyle())
+                Spacer()
+                
+                BottomInputView(todo: todoManager.curTodo).layoutPriority(1)
 
-                BottomInputView(todo: todoManager.curTodo)
-
-            }.frame(minWidth: 0, maxWidth: .infinity, minHeight: 0,  maxHeight: .infinity, alignment: .center)
-                .navigationTitle(Text("List").font(.largeTitle))
-                .background(Color(.init(red: 0xf7/255, green: 0xf7/255, blue: 0xf7/255, alpha: 0)))
+            }.navigationTitle(Text("List").font(.largeTitle))
+                .background(Color("ngmainbackgroud"))
         }
     }
 }

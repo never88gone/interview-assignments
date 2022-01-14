@@ -32,5 +32,6 @@ struct Todo: Identifiable {
     var info: String
     var title: String = ""
     var hasDelete : Bool=false
+    var isEdit : Bool=false
 }
 
