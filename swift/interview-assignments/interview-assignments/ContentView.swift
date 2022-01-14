@@ -14,60 +14,56 @@ struct ContentView: View {
     @State private var selection = 0
     @State private var todoStr = ""
     @State private var descStr = "aaa"
-    
-    @EnvironmentObject private var todoManager: TodoManager
+
     
     func deleteRow(at offsets:IndexSet) {
-        todoManager.todos.remove(atOffsets: offsets)
+       
     }
     func moveItem(from source: IndexSet, to destination: Int) {
-        todoManager.todos.move(fromOffsets: source, toOffset: destination)
+      
+    }
+    init(){
+        TodoManager.shared.addTask(info: "desc1",title: "haha" )
+        TodoManager.shared.addTask(info: "desc2",title: "haha" )
+        TodoManager.shared.addTask(info: "desc3",title: "haha1" )
+        TodoManager.shared.addTask(info: "desc4",title: "haha1" )
+        TodoManager.shared.addTask(info: "desc5",title: "haha1" )
+        TodoManager.shared.addTask(info: "desc6",title: "haha2" )
     }
     var body: some View {
-        let todoManager = TodoManager()
-        todoManager.addTask(info: "desc1",title: "haha" )
-        todoManager.addTask(info: "desc2",title: "haha" )
-        todoManager.addTask(info: "desc2",title: "haha1" )
-        todoManager.addTask(info: "desc2")
-        todoManager.addTask(info: "desc2")
-        todoManager.addTask(info: "desc2")
-        todoManager.curTodo=todoManager.todos[0]
-
-        let keys = [String](todoManager.getShowTodos().keys)
         return  NavigationView{
             VStack {
                 List {
-                    ForEach(keys, id: \.self) { oneKey in
-                        Section(header: Text(oneKey).font(.title))
+                    ForEach(TodoManager.shared.todoGroups) { oneTodoGroup in
+                        Section(header: Text(oneTodoGroup.title).font(.title).foregroundColor(Color("ngtextback")))
                         {
-                            let todolist = [Todo](todoManager.getShowTodos()[oneKey] ?? [Todo]())
+                            let todolist = oneTodoGroup.todos
                             ForEach(todolist) { oneTodo in
                                 ToDoTVCell(todo:oneTodo)
                             }.onDelete(perform: deleteRow).onMove(perform: moveItem)
+                            .listRowBackground(Color.clear)
                         }
                     }
 
-                }.listStyle(GroupedListStyle())
+                }.listStyle(GroupedListStyle()).background(Color.blue)
                 Spacer()
                 
-                BottomInputView(todo: todoManager.curTodo).layoutPriority(1)
+                BottomInputView().layoutPriority(1)
 
             }.navigationTitle(Text("List").font(.largeTitle))
                 .background(Color("ngmainbackgroud"))
-        }
+        }.edgesIgnoringSafeArea(.all)
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        let todoManager = TodoManager()
-        todoManager.addTask(info: "desc1",title: "haha" )
-        todoManager.addTask(info: "desc2",title: "haha" )
-        todoManager.addTask(info: "desc2",title: "haha1" )
-        todoManager.addTask(info: "desc2")
-        todoManager.addTask(info: "desc2")
-        todoManager.addTask(info: "desc2")
-        todoManager.curTodo=todoManager.todos[0]
-        return ContentView().previewDevice("iPhone 13").environmentObject(todoManager)
+        TodoManager.shared.addTask(info: "desc1",title: "haha" )
+        TodoManager.shared.addTask(info: "desc2",title: "haha" )
+        TodoManager.shared.addTask(info: "desc3",title: "haha1" )
+        TodoManager.shared.addTask(info: "desc4",title: "haha1" )
+        TodoManager.shared.addTask(info: "desc5",title: "haha1" )
+        TodoManager.shared.addTask(info: "desc6",title: "haha1" )
+        return ContentView().previewDevice("iPhone 13")
     }
 }

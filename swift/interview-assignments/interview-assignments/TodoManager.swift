@@ -9,21 +9,52 @@ import SwiftUI
 import Combine
 
 class TodoManager: NSObject, ObservableObject {
-    @Published  var curTodo: Todo=Todo(info: "")
-    @Published var todos = [Todo]()
+    
+    static let shared = TodoManager()
+    
+    // Make sure the class has only one instance
+    // Should not init or copy outside
+    private override init() {}
+    
+    override func copy() -> Any {
+        return self // SingletonClass.shared
+    }
+    
+    override func mutableCopy() -> Any {
+        return self // SingletonClass.shared
+    }
+    
+    // Optional
+    func reset() {
+        // Reset all properties to default value
+    }
 
     
-    /**数据展示的时候使用**/
-    func getShowTodos() -> Dictionary<String, [Todo]>{
-        return Dictionary(grouping: todos, by: {
-            $0.title
-        })
-    }
-    func addTask(info: String) {
-        todos.append(Todo(info: info))
-    }
+    
+    @Published var todoGroups = [TodoGroup]()
+    
     func addTask(info: String ,title: String) {
-        todos.append(Todo(info: info,title: title))
+        var isContain : Bool = false
+        var equalIndex : Int = 0
+        var  countIndex: Int = 0
+        for oneGroup in todoGroups {
+            if (oneGroup.title == title){
+                isContain = true
+                equalIndex = countIndex
+                break
+                
+            }
+            countIndex += 1
+        }
+        if(isContain){
+            var oneGroup=todoGroups[equalIndex]
+            let oneTodo : Todo =  Todo(info: info,title: title,index: oneGroup.todos.count)
+            oneGroup.todos.append(oneTodo)
+            todoGroups[equalIndex]=oneGroup
+        }else {
+            let oneTodoGroup : TodoGroup =  TodoGroup(title: title,index: 0)
+            todoGroups.append(oneTodoGroup)
+        }
     }
 }
 
@@ -33,5 +64,13 @@ struct Todo: Identifiable {
     var title: String = ""
     var hasDelete : Bool=false
     var isEdit : Bool=false
+    var index:  Int=0
+}
+
+struct TodoGroup: Identifiable {
+    var id:  UUID = UUID()
+    var title: String = ""
+    var index:  Int=0
+    var todos = [Todo]()
 }
 

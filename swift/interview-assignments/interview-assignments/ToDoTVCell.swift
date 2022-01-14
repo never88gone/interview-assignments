@@ -15,12 +15,12 @@ struct ToDoTVCell: View {
                 Group {
                     if (todo.hasDelete){
                         ZStack{
-                            Image(systemName:"circle").resizable().frame(width: 40, height: 40).foregroundColor(Color("ngtextgray"))
-                            Image(systemName: "circle.fill").resizable().frame(width: 25, height: 25).foregroundColor(Color("ngtextgray"))
+                            Image(systemName:"circle").resizable().frame(width: 30, height: 30).foregroundColor(Color("ngtextgray"))
+                            Image(systemName: "circle.fill").resizable().frame(width: 15, height: 15).foregroundColor(Color("ngtextgray"))
                         }
                        
                     }else {
-                        Image(systemName: "circle").resizable().frame(width: 40, height: 40, alignment: .center).foregroundColor(Color("ngtextgray"))
+                        Image(systemName: "circle").resizable().frame(width: 30, height: 30, alignment: .center).foregroundColor(Color("ngtextgray"))
                     }
                 }.padding(.leading, 10.0).background(Color.clear)
                 
@@ -35,16 +35,15 @@ struct ToDoTVCell: View {
                 }.frame(maxWidth: .infinity,maxHeight: .infinity).background(Color.init(red: 0, green: 0, blue: 0, opacity: 0.1))
             }
 
-        }.frame(minWidth: 0,  maxWidth: .infinity, minHeight: 0, maxHeight: .infinity).background(Color.clear).padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing:10)).cornerRadius(5.0)
+        }.frame(minHeight:40,maxHeight: .infinity).background(Color.white).padding(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing:15)).cornerRadius(5.0)
     }
 }
 
 struct ToDoTVCell_Previews: PreviewProvider {
     static var previews: some View {
-        let todoManager = TodoManager()
-        todoManager.addTask(info: "todoTest1")
-        todoManager.todos[0].hasDelete=false
-        return ToDoTVCell(todo: todoManager.todos[0]).previewLayout(.fixed(width: 375, height: 60)).environmentObject(todoManager)
+        TodoManager.shared.addTask(info: "info1",title: "title1")
+        TodoManager.shared.addTask(info: "info2",title: "title1")
+        return ToDoTVCell(todo: TodoManager.shared.todoGroups[0].todos[0]).previewLayout(.fixed(width: 375, height: 50))
             
     }
 }
