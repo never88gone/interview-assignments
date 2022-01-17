@@ -8,19 +8,21 @@
 import SwiftUI
 
 struct BottomInputView: View {
-    @State  var todo:Todo = Todo(info: "",title :"")
+    @EnvironmentObject var todoManager: TodoManager
+    
+    @State  var todo:Todo = Todo(title: "",groupName :"")
     @State private var inputTipText = ""
     @State private var  showingActionSheet=false
     @State private var  defualtTypeStr = ""
     var body: some View {
-        if(TodoManager.shared.todoGroups.count>0){
-            self.defualtTypeStr=TodoManager.shared.todoGroups[0].title
+        if(todoManager.todoGroups.count>0){
+            self.defualtTypeStr=todoManager.todoGroups[0].groupName
         }
         var  buttons=[Alert.Button]()
         
-        for oneTodoGroup in TodoManager.shared.todoGroups {
-            let button = ActionSheet.Button.default(Text(oneTodoGroup.title),action: {
-                self.defualtTypeStr=oneTodoGroup.title
+        for oneTodoGroup in todoManager.todoGroups {
+            let button = ActionSheet.Button.default(Text(oneTodoGroup.groupName),action: {
+                self.defualtTypeStr=oneTodoGroup.groupName
             })
             buttons.append(button)
         }
@@ -29,10 +31,10 @@ struct BottomInputView: View {
         
         return HStack {
             TextField("add new...", text:$inputTipText ).frame(width: .infinity, height: 44).padding(EdgeInsets(top:0, leading:10, bottom: 0, trailing: 5)).background(Color.white).cornerRadius(10).fixedSize(horizontal: false, vertical: true).foregroundColor(Color("ngtextback")).padding(EdgeInsets(top:5, leading:10, bottom: 5, trailing: 10)).onSubmit {
-                TodoManager.shared.addTask(info: self.inputTipText,title:self.defualtTypeStr)
+                todoManager.addTask(title: self.inputTipText,groupName:self.defualtTypeStr)
             }
                 
-            if (TodoManager.shared.todoGroups.count>=0){
+            if (todoManager.todoGroups.count>=0){
                 Button(action: {
                     self.showingActionSheet = true
                 }){
@@ -53,9 +55,13 @@ struct BottomInputView: View {
 
 struct BottomInputView_Previews: PreviewProvider {
     static var previews: some View {
-        TodoManager.shared.addTask(info: "todoTest1",title: "haha")
-        TodoManager.shared.addTask(info: "todoTest1",title: "haha")
-        TodoManager.shared.addTask(info: "todoTest1",title: "haha")
-        return BottomInputView(todo: TodoManager.shared.todoGroups[0].todos[0]).previewLayout(.fixed(width: 375, height: 60))
+        let todoManager = TodoManager()
+        todoManager.addTask(title: "desc1",groupName: "haha" )
+        todoManager.addTask(title: "desc2",groupName: "haha" )
+        todoManager.addTask(title: "desc3",groupName: "haha1" )
+        todoManager.addTask(title: "desc4",groupName: "haha1" )
+        todoManager.addTask(title: "desc5",groupName: "haha1" )
+        todoManager.addTask(title: "desc6",groupName: "haha1" )
+        return BottomInputView(todo: todoManager.todoGroups[0].todos[0]).previewLayout(.fixed(width: 375, height: 60)).environmentObject(todoManager)
     }
 }

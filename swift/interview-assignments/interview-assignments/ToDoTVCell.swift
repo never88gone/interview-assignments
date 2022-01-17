@@ -24,12 +24,12 @@ struct ToDoTVCell: View {
                     }
                 }.padding(.leading, 10.0).background(Color.clear)
                 Group{
-                    if (todo.isEdit){
-                        TextField("添加信息", text: $todo.info)
+                    if (!todo.hasDelete){
+                        TextField("添加信息", text: $todo.title)
                             .textFieldStyle(PlainTextFieldStyle())
-                            .foregroundColor(!todo.hasDelete ? Color("ngtextback"): Color("ngtextgray")) .disabled(!todo.isEdit)
+                             .disabled(todo.disable)
                     }else {
-                        Text(todo.info).strikethrough(true, color: Color("ngtextgray")).foregroundColor( Color("ngtextgray"))
+                        Text(todo.title).strikethrough(true, color: Color("ngtextgray")).foregroundColor( Color("ngtextgray"))
                     }
                 }.background(Color.clear).font(.title)
                 Spacer()
@@ -47,11 +47,8 @@ struct ToDoTVCell: View {
 
 struct ToDoTVCell_Previews: PreviewProvider {
     static var previews: some View {
-        TodoManager.shared.addTask(info: "info1",title: "title1")
-        TodoManager.shared.addTask(info: "info2",title: "title1")
-        TodoManager.shared.todoGroups[0].todos[0].isEdit=false
-        TodoManager.shared.todoGroups[0].todos[0].hasDelete=false
-        return ToDoTVCell(todo: TodoManager.shared.todoGroups[0].todos[0]).previewLayout(.fixed(width: 375, height: 50))
+        let todo = Todo(title: "info", groupName: "haha", hasDelete: false, disable:  false, index: 0)
+        return ToDoTVCell(todo: todo).previewLayout(.fixed(width: 375, height: 50))
             
     }
 }
