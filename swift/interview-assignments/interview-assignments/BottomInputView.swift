@@ -28,7 +28,7 @@ struct BottomInputView: View {
         buttons.append(cancelButton)
         
         return HStack {
-            TextField("add new...", text:$inputTipText ).background(Color.white).frame(maxWidth: .infinity, maxHeight: 44).fixedSize(horizontal: false, vertical: true).foregroundColor(Color("ngtextback")).padding(EdgeInsets(top:5, leading:10, bottom: 5, trailing: 5)).cornerRadius(10).onSubmit {
+            TextField("add new...", text:$inputTipText ).frame(width: .infinity, height: 44).padding(EdgeInsets(top:0, leading:10, bottom: 0, trailing: 5)).background(Color.white).cornerRadius(10).fixedSize(horizontal: false, vertical: true).foregroundColor(Color("ngtextback")).padding(EdgeInsets(top:5, leading:10, bottom: 5, trailing: 10)).onSubmit {
                 TodoManager.shared.addTask(info: self.inputTipText,title:self.defualtTypeStr)
             }
                 
@@ -38,9 +38,10 @@ struct BottomInputView: View {
                 }){
                     HStack{
                         Text(defualtTypeStr).foregroundColor(Color("ngtextback"))
-                        Image(systemName: "chevron.down").foregroundColor(Color("ngtextgray"))
+                        Spacer()
+                        Image(systemName: "chevron.down").foregroundColor(Color("ngtextgray")).padding(.trailing,5)
                     }.frame(maxWidth: .infinity, maxHeight: .infinity).cornerRadius(10)
-                }.frame(maxWidth: 100, maxHeight: 44).background(Color.white).cornerRadius(10).padding(EdgeInsets(top:5, leading:0, bottom: 5, trailing: 15)).actionSheet(isPresented: $showingActionSheet) {
+                }.frame(minWidth: 50,maxWidth: 80, maxHeight: 30).background(Color.white).cornerRadius(10).padding(EdgeInsets(top:5, leading:0, bottom: 5, trailing: 15)).layoutPriority(1).actionSheet(isPresented: $showingActionSheet) {
                     ActionSheet(title: Text("选择类型"), message: Text("选择todo的类型"), buttons: buttons
                     )
                 }

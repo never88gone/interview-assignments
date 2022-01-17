@@ -17,10 +17,13 @@ struct ContentView: View {
 
     
     func deleteRow(at offsets:IndexSet) {
-       
+        let indexPath = IndexPath(indexes: offsets)
+        TodoManager.shared.todoGroups[indexPath.section].todos[indexPath.row].hasDelete=true;
+        
     }
     func moveItem(from source: IndexSet, to destination: Int) {
-      
+        let sourceIndexPath = IndexPath(indexes: source)
+        let toIndexPath = IndexPath(row: destination, section: sourceIndexPath.section)
     }
     init(){
         UITableView.appearance().separatorColor = UIColor.clear

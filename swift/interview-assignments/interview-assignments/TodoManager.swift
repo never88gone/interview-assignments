@@ -62,8 +62,8 @@ struct Todo: Identifiable {
     var id:  UUID = UUID()
     var info: String
     var title: String = ""
-    var hasDelete : Bool=false
-    var isEdit : Bool=false
+    var hasDelete : Bool=true
+    var isEdit : Bool=true
     var index:  Int=0
 }
 
