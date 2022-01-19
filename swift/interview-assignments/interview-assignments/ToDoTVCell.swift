@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ToDoTVCell: View {
     @State  var todo:Todo
+    let cellTextChangedAction: ((String) -> Void)?
     var body: some View {
         ZStack {
             HStack{
@@ -26,8 +27,12 @@ struct ToDoTVCell: View {
                 Group{
                     if (!todo.hasDelete){
                         TextField("添加信息", text: $todo.title)
+                            .foregroundColor(Color.red)
                             .textFieldStyle(PlainTextFieldStyle())
-                             .disabled(todo.disable)
+//                            .disabled(false)
+                            .onSubmit {
+                                cellTextChangedAction?(todo.title)
+                            }
                     }else {
                         Text(todo.title).strikethrough(true, color: Color("ngtextgray")).foregroundColor( Color("ngtextgray"))
                     }
@@ -40,15 +45,19 @@ struct ToDoTVCell: View {
 
                 }.frame(maxWidth: .infinity,maxHeight: .infinity).background(Color.init(red: 0, green: 0, blue: 0, opacity: 0.1))
             }
-
         }.frame(minHeight:40,maxHeight: .infinity).background(Color.white).cornerRadius(10.0).padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing:5))
     }
 }
 
 struct ToDoTVCell_Previews: PreviewProvider {
     static var previews: some View {
-        let todo = Todo(title: "info", groupName: "haha", hasDelete: false, disable:  false, index: 0)
-        return ToDoTVCell(todo: todo).previewLayout(.fixed(width: 375, height: 50))
-            
+        let todo = Todo(title: "info", groupName: "haha")
+        return ToDoTVCell(todo:todo, cellTextChangedAction: {
+            inputText in
+            if (inputText.count == 0) {
+               
+            }
+        }).previewLayout(.fixed(width: 375, height: 50))
+
     }
 }

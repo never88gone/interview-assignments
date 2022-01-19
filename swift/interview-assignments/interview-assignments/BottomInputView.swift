@@ -8,21 +8,28 @@
 import SwiftUI
 
 struct BottomInputView: View {
-    @EnvironmentObject var todoManager: TodoManager
-    
+    @State  var todoList : [Todo]
     @State  var todo:Todo = Todo(title: "",groupName :"")
     @State private var inputTipText = ""
     @State private var  showingActionSheet=false
     @State private var  defualtTypeStr = ""
+    let appendTodoAction: ((String,String) -> Void)?
+    
     var body: some View {
-        if(todoManager.todoGroups.count>0){
-            self.defualtTypeStr=todoManager.todoGroups[0].groupName
+        var groupDic : [String : [Todo]]{
+           Dictionary (
+            grouping: todoList,
+               by: {$0.groupName}
+           )
+       }
+        if(groupDic.keys.sorted().count>0){
+            self.defualtTypeStr=groupDic.keys.sorted()[0]
         }
         var  buttons=[Alert.Button]()
         
-        for oneTodoGroup in todoManager.todoGroups {
-            let button = ActionSheet.Button.default(Text(oneTodoGroup.groupName),action: {
-                self.defualtTypeStr=oneTodoGroup.groupName
+        for oneTodoGroup in groupDic.keys.sorted() {
+            let button = ActionSheet.Button.default(Text(oneTodoGroup),action: {
+                self.defualtTypeStr=oneTodoGroup
             })
             buttons.append(button)
         }
@@ -31,10 +38,10 @@ struct BottomInputView: View {
         
         return HStack {
             TextField("add new...", text:$inputTipText ).frame(width: .infinity, height: 44).padding(EdgeInsets(top:0, leading:10, bottom: 0, trailing: 5)).background(Color.white).cornerRadius(10).fixedSize(horizontal: false, vertical: true).foregroundColor(Color("ngtextback")).padding(EdgeInsets(top:5, leading:10, bottom: 5, trailing: 10)).onSubmit {
-                todoManager.addTask(title: self.inputTipText,groupName:self.defualtTypeStr)
+                appendTodoAction?(self.inputTipText,self.defualtTypeStr)
             }
                 
-            if (todoManager.todoGroups.count>=0){
+            if (groupDic.keys.sorted().count>=0){
                 Button(action: {
                     self.showingActionSheet = true
                 }){
@@ -53,15 +60,10 @@ struct BottomInputView: View {
     }
 }
 
-struct BottomInputView_Previews: PreviewProvider {
-    static var previews: some View {
-        let todoManager = TodoManager()
-        todoManager.addTask(title: "desc1",groupName: "haha" )
-        todoManager.addTask(title: "desc2",groupName: "haha" )
-        todoManager.addTask(title: "desc3",groupName: "haha1" )
-        todoManager.addTask(title: "desc4",groupName: "haha1" )
-        todoManager.addTask(title: "desc5",groupName: "haha1" )
-        todoManager.addTask(title: "desc6",groupName: "haha1" )
-        return BottomInputView(todo: todoManager.todoGroups[0].todos[0]).previewLayout(.fixed(width: 375, height: 60)).environmentObject(todoManager)
-    }
-}
+//struct BottomInputView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let todoList = [Todo(title: "title1",groupName:"haha"), Todo(title: "title2",groupName:"haha"), Todo(title: "title13",groupName:"haha"), Todo(title: "title4",groupName:"haha1")]
+////        let todoManager: TodoManager = TodoManager()
+//        return BottomInputView(todoList: todoList, todo:todoList[0]).previewLayout(.fixed(width: 375, height: 60))
+//    }
+//}

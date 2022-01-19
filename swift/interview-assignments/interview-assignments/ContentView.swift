@@ -11,64 +11,60 @@ import SwiftUI
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject var todoManager: TodoManager
     
-    func deleteRow(at offsets:IndexSet) {
-      
-        
-    }
-    func moveItem(from source: IndexSet, to destination: Int) {
-        
-    }
-    
-    func todoIndexPath(todo:Todo) -> IndexPath {
-        var section :Int = 0
-        var row :Int = 0
-        for oneTodoGroup in todoManager.todoGroups {
-           
-            for oneTodo in oneTodoGroup.todos {
-                if oneTodo.id == todo.id {
-                    return IndexPath(row: row, section: section)
-                }
-                row = row + 1
-            }
-            section = section + 1
-        }
-        return IndexPath(row: -1, section: -1)
-    }
+    @State var todoManager: TodoManager = TodoManager()
+    @State var todoList = [Todo(title: "title1",groupName:"haha"), Todo(title: "title2",groupName:"haha"), Todo(title: "title13",groupName:"haha"), Todo(title: "title4",groupName:"haha1")]
     
     init(){
         UITableView.appearance().separatorColor = UIColor.clear
 
     }
+    func indexOfTodo(todo: Todo) -> Int {
+        var oneIndex : Int = 0
+        for oneTodo in todoList {
+            if ( oneTodo.id == todo.id)
+            {
+               break
+            }
+            oneIndex = oneIndex + 1
+        }
+        return oneIndex
+    }
     var body: some View {
+        var groupDic : [String : [Todo]]{
+           Dictionary (
+            grouping: todoList,
+               by: {$0.groupName}
+           )
+       }
         return  NavigationView{
             VStack {
                 List {
-                    ForEach(todoManager.todoGroups) { oneTodoGroup in
-                        Section(header: Text(oneTodoGroup.groupName).font(.title).foregroundColor(Color("ngtextback")))
+                    ForEach(groupDic.keys.sorted(), id: \.self ) { oneKey in
+                        Section(header: Text(oneKey).font(.title).foregroundColor(Color("ngtextback")))
                         {
-                            ForEach(oneTodoGroup.todos) { oneTodo in
-                                ToDoTVCell(todo:oneTodo).onLongPressGesture {
-                                    let indexPath = self.todoIndexPath(todo: oneTodo)
-                                    todoManager.todoGroups[indexPath.section].todos[indexPath.row].hasDelete=true
-                                }
-                            }.onDelete(perform: { offsets in
-
-                            }).onLongPressGesture(perform: {
-                                
-                            })
+                            let sectionTodos : [Todo] = groupDic[oneKey] ?? []
+                            ForEach(sectionTodos) { oneTodo in
+                                ToDoTVCell(todo:oneTodo, cellTextChangedAction: {
+                                    inputText in
+                                    if (inputText.count == 0) {
+                                        let curIndex = indexOfTodo(todo: oneTodo)
+                                        todoList.remove(at: curIndex)
+                                    }
+                                })
+                            }
                             .listRowBackground(Color.clear)
-                          
                         }
-                       
                     }
 
                 }.listStyle(GroupedListStyle()).background(Color.blue)
                 Spacer()
                 
-                BottomInputView().layoutPriority(1)
-
+                BottomInputView(todoList: todoList, appendTodoAction : {
+                    oneTitle, oneGroupName in
+                    todoList.append(Todo(title: oneTitle, groupName: oneGroupName))
+                     }
+                    )
             }.navigationTitle(Text("List").font(.largeTitle).foregroundColor(Color("ngtextgraybackgroud")))
                 .background(Color("ngmainbackgroud"))
         }.edgesIgnoringSafeArea(.all)
@@ -77,13 +73,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        let todoManager = TodoManager()
-        todoManager.addTask(title: "desc1",groupName: "haha" )
-        todoManager.addTask(title: "desc2",groupName: "haha" )
-        todoManager.addTask(title: "desc3",groupName: "haha1" )
-        todoManager.addTask(title: "desc4",groupName: "haha1" )
-        todoManager.addTask(title: "desc5",groupName: "haha1" )
-        todoManager.addTask(title: "desc6",groupName: "haha1" )
-        return ContentView().previewDevice("iPhone 13").environmentObject(todoManager)
+        return ContentView().previewDevice("iPhone 13")
     }
 }
