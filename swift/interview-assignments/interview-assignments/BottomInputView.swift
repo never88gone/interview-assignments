@@ -49,13 +49,14 @@ struct BottomInputView: View {
     }
 }
 
-//struct BottomInputView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        let groupNameList = ["SwiftUI Essentials","Drawing and Animation"]
-//        var groupName = "分组"
-//        return BottomInputView(groupNameList: groupNameList,groupName : $groupName, appendTodoAction : {
-//            oneTitle, oneGroupName in
-//
-//             }).previewLayout(.fixed(width: 375, height: 60))
-//    }
-//}
+struct BottomInputView_Previews: PreviewProvider {
+    @State static var groupName = "分组"
+    static var previews: some View {
+        let groupNameList = ["SwiftUI Essentials","Drawing and Animation"]
+      
+        return BottomInputView(groupNameList: groupNameList,groupName : $groupName, appendTodoAction : {
+            oneTitle, oneGroupName in
+
+             }).previewLayout(.fixed(width: 375, height: 60))
+    }
+}

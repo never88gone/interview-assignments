@@ -11,6 +11,8 @@ import SwiftUI
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State  var  showAlert : Bool = false
     @State  var  curGroupName : String = ""
     @State var todoManager: TodoManager = TodoManager()
     @State var todoList = [Todo(title: "Building Lists and Navigation",groupName:"SwiftUI Essentials"), Todo(title: "Creating and Combining Views",groupName:"SwiftUI Essentials"), Todo(title: "Hanline User Input",groupName:"SwiftUI Essentials"), Todo(title: "Animating Views and Transitions",groupName:"Drawing and Animation"), Todo(title: "Drawing Paths and Shapes",groupName:"Drawing and Animation")]
@@ -66,9 +68,9 @@ struct ContentView: View {
                     )
             }.navigationTitle(Text("List").font(.largeTitle).foregroundColor(Color("ngtextgraybackgroud")))
                 .background(Color("ngmainbackgroud")).navigationBarItems(trailing: Button("添加分组", action: {
-                    
+                    self.showAlert.toggle()
                 }))
-        }.edgesIgnoringSafeArea(.all)
+        }.edgesIgnoringSafeArea(.all).textFieldAlert(isShowing: $showAlert, text: $curGroupName, placeholder: "添加分组名称", title: "设置当前分组名称")
     }
 }
 

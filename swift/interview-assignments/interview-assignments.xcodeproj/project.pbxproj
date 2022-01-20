@@ -15,6 +15,7 @@
 		387044E0278D29A000E23A15 /* TodoTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387044DF278D29A000E23A15 /* TodoTVCell.swift */; };
 		387044E2278D29C600E23A15 /* BottomInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387044E1278D29C600E23A15 /* BottomInputView.swift */; };
 		38C088BA2799370B00878AAE /* TodoSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C088B92799370B00878AAE /* TodoSectionView.swift */; };
+		38C088BC27995E0F00878AAE /* TextFieldAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C088BB27995E0F00878AAE /* TextFieldAlert.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		387044DF278D29A000E23A15 /* TodoTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoTVCell.swift; sourceTree = "<group>"; };
 		387044E1278D29C600E23A15 /* BottomInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomInputView.swift; sourceTree = "<group>"; };
 		38C088B92799370B00878AAE /* TodoSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoSectionView.swift; sourceTree = "<group>"; };
+		38C088BB27995E0F00878AAE /* TextFieldAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldAlert.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,7 @@
 				387044DF278D29A000E23A15 /* TodoTVCell.swift */,
 				38C088B92799370B00878AAE /* TodoSectionView.swift */,
 				387044E1278D29C600E23A15 /* BottomInputView.swift */,
+				38C088BB27995E0F00878AAE /* TextFieldAlert.swift */,
 				3865FE252786C81100FEAD31 /* Assets.xcassets */,
 				3865FE272786C81100FEAD31 /* Preview Content */,
 			);
@@ -150,6 +153,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				38C088BA2799370B00878AAE /* TodoSectionView.swift in Sources */,
+				38C088BC27995E0F00878AAE /* TextFieldAlert.swift in Sources */,
 				3865FE242786C81000FEAD31 /* ContentView.swift in Sources */,
 				387044E0278D29A000E23A15 /* TodoTVCell.swift in Sources */,
 				3865FE302786E44D00FEAD31 /* TodoManager.swift in Sources */,
