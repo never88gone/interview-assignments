@@ -40,24 +40,17 @@ struct ToDoTVCell: View {
                     }
                 }.background(Color.clear).font(.title)
                 Spacer()
-            }.if(todo.checked) { view  in
-                view.background(Color.red)
+            }
+            if (todo.checked){
+                ZStack{
+                    Rectangle().frame(width: .infinity, height: 1, alignment:.center).padding().foregroundColor(Color("ngtextgraybackgroud"))
+
+                }.frame(maxWidth: .infinity,maxHeight: .infinity).background(Color.init(red: 0, green: 0, blue: 0, opacity: 0.1)).allowsHitTesting(false)
             }
         }.frame(minHeight:40,maxHeight: .infinity).background(Color.white).cornerRadius(10.0).padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing:5))
     }
 }
 
-extension View {
-    @ViewBuilder func `if`<Content: View>(_ condition: Bool, addOverlay: (Self) -> Content) -> some View {
-        if condition {
-            self.overlay(ZStack{
-                    Rectangle().frame(width: .infinity, height: 1, alignment:.center).padding().foregroundColor(Color("ngtextgraybackgroud"))
-                }.frame(maxWidth: .infinity,maxHeight: .infinity).background(Color.init(red: 0, green: 0, blue: 0, opacity: 0.1)))
-        } else {
-            self
-        }
-    }
-}
 
 struct ToDoTVCell_Previews: PreviewProvider {
     static var previews: some View {
