@@ -10,22 +10,24 @@ import SwiftUI
 struct ToDoTVCell: View {
     @State  var todo:Todo
     let cellTextChangedAction: ((String) -> Void)?
+    let cellCheckedChangedAction: (() -> Void)?
     var body: some View {
         ZStack {
             HStack{
                 Group {
-                    if (todo.hasDelete){
+                    if (todo.checked){
                         ZStack{
                             Image(systemName:"circle").resizable().frame(width: 30, height: 30).foregroundColor(Color("ngtextgray"))
                             Image(systemName: "circle.fill").resizable().frame(width: 15, height: 15).foregroundColor(Color("ngtextgray"))
                         }
-                       
                     }else {
                         Image(systemName: "circle").resizable().frame(width: 30, height: 30, alignment: .center).foregroundColor(Color("ngtextgray"))
                     }
-                }.padding(.leading, 10.0).background(Color.clear)
+                }.padding(.leading, 10.0).background(Color.clear).onTapGesture {
+                    cellCheckedChangedAction?()
+                }
                 Group{
-                    if (!todo.hasDelete){
+                    if (!todo.checked){
                         TextField("添加信息", text: $todo.title)
                             .foregroundColor(Color.red)
                             .textFieldStyle(PlainTextFieldStyle())
@@ -38,14 +40,22 @@ struct ToDoTVCell: View {
                     }
                 }.background(Color.clear).font(.title)
                 Spacer()
-            }
-            if (todo.hasDelete){
-                ZStack{
-                    Rectangle().frame(width: .infinity, height: 1, alignment:.center).padding().foregroundColor(Color("ngtextgraybackgroud"))
-
-                }.frame(maxWidth: .infinity,maxHeight: .infinity).background(Color.init(red: 0, green: 0, blue: 0, opacity: 0.1))
+            }.if(todo.checked) { view  in
+                view.background(Color.red)
             }
         }.frame(minHeight:40,maxHeight: .infinity).background(Color.white).cornerRadius(10.0).padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing:5))
+    }
+}
+
+extension View {
+    @ViewBuilder func `if`<Content: View>(_ condition: Bool, addOverlay: (Self) -> Content) -> some View {
+        if condition {
+            self.overlay(ZStack{
+                    Rectangle().frame(width: .infinity, height: 1, alignment:.center).padding().foregroundColor(Color("ngtextgraybackgroud"))
+                }.frame(maxWidth: .infinity,maxHeight: .infinity).background(Color.init(red: 0, green: 0, blue: 0, opacity: 0.1)))
+        } else {
+            self
+        }
     }
 }
 
@@ -57,6 +67,8 @@ struct ToDoTVCell_Previews: PreviewProvider {
             if (inputText.count == 0) {
                
             }
+        }, cellCheckedChangedAction:{
+            todo.checked.toggle()
         }).previewLayout(.fixed(width: 375, height: 50))
 
     }

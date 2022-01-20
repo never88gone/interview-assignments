@@ -44,13 +44,19 @@ struct ContentView: View {
                         Section(header: Text(oneKey).font(.title).foregroundColor(Color("ngtextback")))
                         {
                             let sectionTodos : [Todo] = groupDic[oneKey] ?? []
-                            ForEach(sectionTodos) { oneTodo in
+                            let sectionSortedTodos = sectionTodos.sorted{ return  $0.checked != true ||  $1.checked == true
+                            }
+                            ForEach(sectionSortedTodos) { oneTodo in
                                 ToDoTVCell(todo:oneTodo, cellTextChangedAction: {
                                     inputText in
                                     if (inputText.count == 0) {
                                         let curIndex = indexOfTodo(todo: oneTodo)
                                         todoList.remove(at: curIndex)
                                     }
+                                }, cellCheckedChangedAction:{
+                                    oneTodo.checked.toggle()
+                                    let curIndex = indexOfTodo(todo: oneTodo)
+                                    todoList[curIndex]=oneTodo
                                 })
                             }
                             .listRowBackground(Color.clear)
@@ -59,10 +65,9 @@ struct ContentView: View {
 
                 }.listStyle(GroupedListStyle()).background(Color.blue)
                 Spacer()
-                
                 BottomInputView(todoList: todoList, appendTodoAction : {
                     oneTitle, oneGroupName in
-                    todoList.append(Todo(title: oneTitle, groupName: oneGroupName))
+                        todoList.append(Todo(title: oneTitle, groupName: oneGroupName))
                      }
                     )
             }.navigationTitle(Text("List").font(.largeTitle).foregroundColor(Color("ngtextgraybackgroud")))

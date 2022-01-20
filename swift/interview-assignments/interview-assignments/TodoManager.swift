@@ -17,7 +17,7 @@ class Todo: Identifiable ,ObservableObject {
     var id:  UUID = UUID()
     var title: String = ""
     var groupName: String = ""
-    var hasDelete : Bool=false
+    var checked : Bool=false
     var disable : Bool=true
     private  init() {
     }
