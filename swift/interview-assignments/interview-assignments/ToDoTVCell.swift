@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ToDoTVCell: View {
+    @FocusState var isNameFocused:Bool
     @State  var todo:Todo
     let cellTextChangedAction: ((String) -> Void)?
     let cellCheckedChangedAction: (() -> Void)?
@@ -31,8 +32,9 @@ struct ToDoTVCell: View {
                         TextField("添加信息", text: $todo.title)
                             .foregroundColor(Color.red)
                             .textFieldStyle(PlainTextFieldStyle())
-//                            .disabled(false)
+                            .focused($isNameFocused)
                             .onSubmit {
+                                isNameFocused = false
                                 cellTextChangedAction?(todo.title)
                             }
                     }else {
@@ -47,7 +49,9 @@ struct ToDoTVCell: View {
 
                 }.frame(maxWidth: .infinity,maxHeight: .infinity).background(Color.init(red: 0, green: 0, blue: 0, opacity: 0.1)).allowsHitTesting(false)
             }
-        }.frame(minHeight:40,maxHeight: .infinity).background(Color.white).cornerRadius(10.0).padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing:5))
+        }.frame(minHeight:40,maxHeight: .infinity).background(Color.white).cornerRadius(10.0).padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing:5))      .gesture(LongPressGesture().onEnded { aaa in
+                isNameFocused = true
+            })
     }
 }
 
