@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ToDoTVCell: View {
+struct TodoTVCell: View {
     @FocusState var isNameFocused:Bool
     @State  var todo:Todo
     let cellTextChangedAction: ((String) -> Void)?
@@ -30,7 +30,7 @@ struct ToDoTVCell: View {
                 Group{
                     if (!todo.checked){
                         TextField("添加信息", text: $todo.title)
-                            .foregroundColor(Color.red)
+                            .foregroundColor(Color("ngtextback"))
                             .textFieldStyle(PlainTextFieldStyle())
                             .focused($isNameFocused)
                             .onSubmit {
@@ -40,7 +40,7 @@ struct ToDoTVCell: View {
                     }else {
                         Text(todo.title).strikethrough(true, color: Color("ngtextgray")).foregroundColor( Color("ngtextgray"))
                     }
-                }.background(Color.clear).font(.title)
+                }.background(Color.clear).font(.custom("PingFangSC-Regular", size: 12).weight(.bold))
                 Spacer()
             }
             if (todo.checked){
@@ -59,7 +59,7 @@ struct ToDoTVCell: View {
 struct ToDoTVCell_Previews: PreviewProvider {
     static var previews: some View {
         let todo = Todo(title: "info", groupName: "haha")
-        return ToDoTVCell(todo:todo, cellTextChangedAction: {
+        return TodoTVCell(todo:todo, cellTextChangedAction: {
             inputText in
             if (inputText.count == 0) {
                
