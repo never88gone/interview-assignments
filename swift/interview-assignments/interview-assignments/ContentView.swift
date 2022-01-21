@@ -14,16 +14,15 @@ struct ContentView: View {
     
     @State  var  showAlert : Bool = false
     @State  var  curGroupName : String = ""
-    @State var todoManager: TodoManager = TodoManager()
-    @State var todoList = [Todo(title: "Building Lists and Navigation",groupName:"SwiftUI Essentials"), Todo(title: "Creating and Combining Views",groupName:"SwiftUI Essentials"), Todo(title: "Hanline User Input",groupName:"SwiftUI Essentials"), Todo(title: "Animating Views and Transitions",groupName:"Drawing and Animation"), Todo(title: "Drawing Paths and Shapes",groupName:"Drawing and Animation")]
+    @StateObject var todoManager: TodoManager = TodoManager()
     
     init(){
         UITableView.appearance().separatorColor = UIColor.clear
-
+        
     }
     func indexOfTodo(todo: Todo) -> Int {
         var oneIndex : Int = 0
-        for oneTodo in todoList {
+        for oneTodo in todoManager.todoList {
             if ( oneTodo.id == todo.id)
             {
                break
@@ -33,44 +32,53 @@ struct ContentView: View {
         return oneIndex
     }
     var body: some View {
-        var groupDic : [String : [Todo]]{
-           Dictionary (
-            grouping: todoList,
-               by: {$0.groupName}
-           )
-       }
-        let groupNameList = groupDic.keys.sorted()
-        if(groupNameList.count>0){
-            self.curGroupName=groupNameList[0]
-        }
+        
         return  NavigationView{
             VStack {
                 List {
-                    ForEach(groupDic.keys.sorted(), id: \.self ) { oneKey in
-                        TodoSectionView(groupName: oneKey, sectionTodoList: groupDic[oneKey] ?? [] ,sectionCellTextChangedAction: { oneTodo, inputText in
-                            if (inputText.count == 0) {
-                                let curIndex = indexOfTodo(todo: oneTodo)
-                                todoList.remove(at: curIndex)
-                            }
-                        }, sectionCellCheckedChangedAction: {
-                            oneTodo in
-                                let curIndex = indexOfTodo(todo: oneTodo)
-                                todoList[curIndex]=oneTodo
-                        })
+                    ForEach(todoManager.groupNameList, id: \.self ) { oneKey in
+                        
+                        let sectionTodoList = todoManager.groupDic[oneKey] ?? []
+                        let sectionSortedTodos = sectionTodoList.sorted{ return  $0.checked != true ||  $1.checked == true
+                        }
+                        Section(header: Text(oneKey).font(.custom("PingFangSC-Regular", size: 16).weight(.bold)).foregroundColor(Color("ngtextback")))
+                         {
+                             ForEach(sectionSortedTodos) { oneTodo in
+                                 TodoTVCell(todo:oneTodo, cellTextChangedAction: {
+                                     inputText in
+                                     if (inputText.count == 0) {
+                                         let curIndex = indexOfTodo(todo: oneTodo)
+                                         var tempList =  todoManager.todoList
+                                         tempList.remove(at: curIndex)
+                                         todoManager.todoList = tempList
+                                         todoManager.calcTodoGroup()
+                                     }
+                                 }, cellCheckedChangedAction:{
+                                     oneTodo.checked.toggle()
+                                     let curIndex = indexOfTodo(todo: oneTodo)
+                                 todoManager.todoList[curIndex]=oneTodo
+                                 todoManager.calcTodoGroup()
+                                 })
+                             }
+                             .listRowBackground(Color.clear)
+                         }
+                        
                     }
-
                 }.listStyle(GroupedListStyle()).background(Color.blue)
                 Spacer()
-                BottomInputView(groupNameList: groupNameList, groupName: $curGroupName, appendTodoAction : {
+                BottomInputView(groupNameList: todoManager.groupNameList, groupName: $todoManager.curGroupName, appendTodoAction : {
                     oneTitle, oneGroupName in
-                        todoList.append(Todo(title: oneTitle, groupName: oneGroupName))
+                        var tempList =  todoManager.todoList
+                        tempList.append(Todo(title: oneTitle, groupName: oneGroupName))
+                        todoManager.todoList = tempList
+                        todoManager.calcTodoGroup()
                      }
                     )
             }.navigationTitle(Text("List").font(.largeTitle).foregroundColor(Color("ngtextgraybackgroud")))
                 .background(Color("ngmainbackgroud")).navigationBarItems(trailing: Button("添加分组", action: {
                     self.showAlert.toggle()
                 }))
-        }.edgesIgnoringSafeArea(.all).textFieldAlert(isShowing: $showAlert, text: $curGroupName, placeholder: "添加分组名称", title: "设置当前分组名称")
+        }.edgesIgnoringSafeArea(.all).textFieldAlert(isShowing: $showAlert, text: $todoManager.curGroupName, placeholder: "添加分组名称", title: "设置当前分组名称")
     }
 }
 

@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct TextFieldAlert<Presenting>: View where Presenting: View {
-
     @Binding var isShowing: Bool
     @State var showText: String = ""
     @Binding var text: String
@@ -43,9 +42,11 @@ struct TextFieldAlert<Presenting>: View where Presenting: View {
                         Divider()
                         HStack {
                             Button(action: {
-                                withAnimation {
+                                if (self.showText.count > 0){
                                     self.text=self.showText
                                     self.isShowing.toggle()
+                                }else {
+                                    
                                 }
                             }) {
                                 Text("OK").foregroundColor(Color("ngtextback"))

@@ -9,8 +9,44 @@ import SwiftUI
 import Combine
 
 class TodoManager: ObservableObject {
- 
-
+    @Published var todoList: [Todo] = [Todo]()
+    @Published var groupDic : [String : [Todo]] = [String : [Todo]]()
+    @Published var groupNameList : [String] = [String]()
+    @Published var curGroupName : String = ""
+    init() {
+        todoList = [Todo(title: "Building Lists and Navigation",groupName:"SwiftUI Essentials"), Todo(title: "Creating and Combining Views",groupName:"SwiftUI Essentials"), Todo(title: "Hanline User Input",groupName:"SwiftUI Essentials"), Todo(title: "Animating Views and Transitions",groupName:"Drawing and Animation"), Todo(title: "Drawing Paths and Shapes",groupName:"Drawing and Animation")]
+        initCalcTodoGroup()
+    }
+    func initCalcTodoGroup(){
+        groupDic = Dictionary (
+                    grouping: todoList,
+                       by: {$0.groupName}
+                   )
+        groupNameList = groupDic.keys.sorted()
+        if(groupNameList.count>0){
+            curGroupName=groupNameList[0]
+        }
+    }
+    
+    func calcTodoGroup(){
+        groupDic = Dictionary (
+                    grouping: todoList,
+                       by: {$0.groupName}
+                   )
+        groupNameList = groupDic.keys.sorted()
+    }
+//    func addTodo(todo:Todo){
+//        objectWillChange.send()
+//        todoList.append(todo)
+//        calcTodoGroup()
+//    }
+//
+//    func removeTodo(index:Int){
+//        objectWillChange.send()
+//        todoList.remove(at: index)
+//        calcTodoGroup()
+//    }
+    
 }
 
 class Todo: Identifiable ,ObservableObject {
@@ -26,4 +62,3 @@ class Todo: Identifiable ,ObservableObject {
         self.groupName=groupName
     }
 }
-//var todoList=[Todo(title: "title1",groupName:"haha"), Todo(title: "title2",groupName:"haha"), Todo(title: "title13",groupName:"haha"), Todo(title: "title4",groupName:"haha1")]

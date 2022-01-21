@@ -12,12 +12,11 @@ struct TodoSectionView: View {
     @State var sectionTodoList : [Todo]
     let sectionCellTextChangedAction: ((Todo,String) -> Void)?
     let sectionCellCheckedChangedAction: ((Todo) -> Void)?
+    
     var body: some View {
-        let sectionSortedTodos = sectionTodoList.sorted{ return  $0.checked != true ||  $1.checked == true
-        }
        return Section(header: Text(groupName).font(.custom("PingFangSC-Regular", size: 16).weight(.bold)).foregroundColor(Color("ngtextback")))
         {
-            ForEach(sectionSortedTodos) { oneTodo in
+            ForEach(sectionTodoList) { oneTodo in
                 TodoTVCell(todo:oneTodo, cellTextChangedAction: {
                     inputText in
                     sectionCellTextChangedAction?(oneTodo,inputText)
