@@ -41,27 +41,21 @@ struct ContentView: View {
                         let sectionTodoList = todoManager.groupDic[oneKey] ?? []
                         let sectionSortedTodos = sectionTodoList.sorted{ return  $0.checked != true ||  $1.checked == true
                         }
-                        Section(header: Text(oneKey).font(.custom("PingFangSC-Regular", size: 16).weight(.bold)).foregroundColor(Color("ngtextback")))
-                         {
-                             ForEach(sectionSortedTodos) { oneTodo in
-                                 TodoTVCell(todo:oneTodo, cellTextChangedAction: {
-                                     inputText in
-                                     if (inputText.count == 0) {
-                                         let curIndex = indexOfTodo(todo: oneTodo)
-                                         var tempList =  todoManager.todoList
-                                         tempList.remove(at: curIndex)
-                                         todoManager.todoList = tempList
-                                         todoManager.calcTodoGroup()
-                                     }
-                                 }, cellCheckedChangedAction:{
-                                     oneTodo.checked.toggle()
-                                     let curIndex = indexOfTodo(todo: oneTodo)
-                                 todoManager.todoList[curIndex]=oneTodo
-                                 todoManager.calcTodoGroup()
-                                 })
-                             }
-                             .listRowBackground(Color.clear)
-                         }
+                        TodoSectionView(groupName: oneKey, sectionTodoList: sectionSortedTodos, sectionCellTextChangedAction: { oneTodo, inputText in
+                            if (inputText.count == 0) {
+                                let curIndex = indexOfTodo(todo: oneTodo)
+                                var tempList =  todoManager.todoList
+                                tempList.remove(at: curIndex)
+                                todoManager.todoList = tempList
+                                todoManager.calcTodoGroup()
+                            }
+                        }, sectionCellCheckedChangedAction: {
+                            oneTodo in
+                                let curIndex = indexOfTodo(todo: oneTodo)
+                            todoManager.todoList[curIndex]=oneTodo
+                            todoManager.calcTodoGroup()
+                        })
+
                         
                     }
                 }.listStyle(GroupedListStyle()).background(Color.blue)

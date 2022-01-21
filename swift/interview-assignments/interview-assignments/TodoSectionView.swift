@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TodoSectionView: View {
     @State var  groupName : String
-    @State var sectionTodoList : [Todo]
+    var sectionTodoList : [Todo]
     let sectionCellTextChangedAction: ((Todo,String) -> Void)?
     let sectionCellCheckedChangedAction: ((Todo) -> Void)?
     
