@@ -13,7 +13,9 @@ import SwiftUI
 struct ContentView: View {
     
     @State  var  showAlert : Bool = false
+    @State  var  showSearch : Bool = false
     @State  var  curGroupName : String = ""
+    @State  var  curSearchTxt : String = ""
     @StateObject var todoManager: TodoManager = TodoManager()
     
     init(){
@@ -69,9 +71,16 @@ struct ContentView: View {
                      }
                     )
             }.navigationTitle(Text("List").font(.largeTitle).foregroundColor(Color("ngtextgraybackgroud")))
-                .background(Color("ngmainbackgroud")).navigationBarItems(trailing: Button("添加分组", action: {
+                .background(Color("ngmainbackgroud")).navigationBarItems(trailing: ZStack{
+                    NavigationLink(destination:SearchBar(placeholder: "输入查询条件", text: $curSearchTxt)) {
+                        Image(systemName:"magnifyingglass").resizable().frame(width: 30, height: 30).foregroundColor(Color.blue)
+                                    }
+                }).navigationBarItems(leading: Button(action: {
                     self.showAlert.toggle()
-                }))
+                }){
+                    Image(systemName:"rectangle.stack.badge.plus").resizable().frame(width: 30, height: 30).foregroundColor(Color.blue)
+                    
+                })
         }.edgesIgnoringSafeArea(.all).textFieldAlert(isShowing: $showAlert, text: $todoManager.curGroupName, placeholder: "添加分组名称", title: "设置当前分组名称")
     }
 }
