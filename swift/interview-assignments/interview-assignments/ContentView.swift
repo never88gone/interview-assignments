@@ -24,7 +24,7 @@ struct ContentView: View {
     }
     func indexOfTodo(todo: Todo) -> Int {
         var oneIndex : Int = 0
-        for oneTodo in todoManager.todoList {
+        for oneTodo in todoManager.showTodoList {
             if ( oneTodo.id == todo.id)
             {
                break
@@ -39,23 +39,20 @@ struct ContentView: View {
             VStack {
                 List {
                     ForEach(todoManager.groupNameList, id: \.self ) { oneKey in
-                        
                         let sectionTodoList = todoManager.groupDic[oneKey] ?? []
                         let sectionSortedTodos = sectionTodoList.sorted{ return  $0.checked != true ||  $1.checked == true
                         }
                         TodoSectionView(groupName: oneKey, sectionTodoList: sectionSortedTodos, sectionCellTextChangedAction: { oneTodo, inputText in
                             if (inputText.count == 0) {
                                 let curIndex = indexOfTodo(todo: oneTodo)
-                                var tempList =  todoManager.todoList
-                                tempList.remove(at: curIndex)
-                                todoManager.todoList = tempList
-                                todoManager.calcTodoGroup()
+                                todoManager.removeTodo(index: curIndex)
+                                todoManager.calcTodoGroup(text: self.curSearchTxt)
                             }
                         }, sectionCellCheckedChangedAction: {
                             oneTodo in
                                 let curIndex = indexOfTodo(todo: oneTodo)
-                            todoManager.todoList[curIndex]=oneTodo
-                            todoManager.calcTodoGroup()
+                            todoManager.updateTodo(index: curIndex, todo: oneTodo)
+                            todoManager.calcTodoGroup(text: self.curSearchTxt)
                         })
 
                         
@@ -64,18 +61,17 @@ struct ContentView: View {
                 Spacer()
                 BottomInputView(groupNameList: todoManager.groupNameList, groupName: $todoManager.curGroupName, appendTodoAction : {
                     oneTitle, oneGroupName in
-                        var tempList =  todoManager.todoList
-                        tempList.append(Todo(title: oneTitle, groupName: oneGroupName))
-                        todoManager.todoList = tempList
-                        todoManager.calcTodoGroup()
+                        todoManager.addTodo(todo: Todo(title: oneTitle, groupName: oneGroupName))
+                        todoManager.calcTodoGroup(text: self.curSearchTxt)
+
                      }
                     )
             }.navigationTitle(Text("List").font(.largeTitle).foregroundColor(Color("ngtextgraybackgroud")))
-                .background(Color("ngmainbackgroud")).navigationBarItems(trailing: ZStack{
-                    NavigationLink(destination:SearchBar(placeholder: "输入查询条件", text: $curSearchTxt)) {
-                        Image(systemName:"magnifyingglass").resizable().frame(width: 30, height: 30).foregroundColor(Color.blue)
-                                    }
-                }).navigationBarItems(leading: Button(action: {
+                .background(Color("ngmainbackgroud")).navigationBarItems(trailing : SearchBar(placeholder: "输入查询内容", text: $curSearchTxt, searchTextChangedAction: {
+                    searchText in
+                    todoManager.calcTodoGroup(text: self.curSearchTxt)
+                }).frame(width:150, height: 44).overlay(RoundedRectangle(cornerRadius: 15).stroke().fill(Color.blue)))
+                  .navigationBarItems(leading: Button(action: {
                     self.showAlert.toggle()
                 }){
                     Image(systemName:"rectangle.stack.badge.plus").resizable().frame(width: 30, height: 30).foregroundColor(Color.blue)

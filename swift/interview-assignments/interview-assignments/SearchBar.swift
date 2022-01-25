@@ -11,10 +11,14 @@ struct SearchBar: View {
     var placeholder: String
     
     @Binding var text: String
-  
+    let searchTextChangedAction: ((String) -> Void)?
     var body: some View {
         HStack {
-            TextField(placeholder, text: $text)
+            TextField(placeholder,
+                      text: $text
+            ).onChange(of: text) { newValue in
+                searchTextChangedAction?(text)
+            }
             if text != "" {
                 Image(systemName: "xmark.circle.fill")
                     .imageScale(.medium)
@@ -35,6 +39,9 @@ struct SearchBar: View {
 
 struct SearchBar_Previews: PreviewProvider {
     static var previews: some View {
-        SearchBar(placeholder: "请输入查询内容", text: .constant(""))
+        SearchBar(placeholder: "请输入查询内容", text: .constant(""), searchTextChangedAction: {
+            searchText in
+            
+        })
     }
 }
