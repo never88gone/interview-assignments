@@ -46,12 +46,12 @@ struct TodoTVCell: View {
             if (todo.checked){
                 ZStack{
                     Rectangle().frame(width: .infinity, height: 1, alignment:.center).padding().foregroundColor(Color("ngtextgraybackgroud"))
-
+                    
                 }.frame(maxWidth: .infinity,maxHeight: .infinity).background(Color.init(red: 0, green: 0, blue: 0, opacity: 0.1)).allowsHitTesting(false)
             }
         }.frame(minHeight:40,maxHeight: .infinity).background(Color.white).cornerRadius(10.0).padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing:5))      .gesture(LongPressGesture().onEnded { aaa in
-                isNameFocused = true
-            })
+            isNameFocused = true
+        })
     }
 }
 
@@ -62,11 +62,11 @@ struct ToDoTVCell_Previews: PreviewProvider {
         return TodoTVCell(todo:todo, cellTextChangedAction: {
             inputText in
             if (inputText.count == 0) {
-               
+                
             }
         }, cellCheckedChangedAction:{
             todo.checked.toggle()
         }).previewLayout(.fixed(width: 375, height: 50))
-
+        
     }
 }

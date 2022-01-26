@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SearchBar: View {
-    var placeholder: String
+    var placeholder: String = "Search"
     
     @Binding var text: String
     let searchTextChangedAction: ((String) -> Void)?
@@ -27,7 +27,7 @@ struct SearchBar: View {
                     .onTapGesture {
                         withAnimation {
                             self.text = ""
-                          }
+                        }
                     }
             }
         }.padding(10)
@@ -39,9 +39,9 @@ struct SearchBar: View {
 
 struct SearchBar_Previews: PreviewProvider {
     static var previews: some View {
-        SearchBar(placeholder: "请输入查询内容", text: .constant(""), searchTextChangedAction: {
+        SearchBar(text: .constant(""), searchTextChangedAction: {
             searchText in
             
-        })
+        }).previewLayout(.fixed(width: 375, height: 60))
     }
 }

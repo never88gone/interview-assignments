@@ -23,9 +23,9 @@ class TodoManager: ObservableObject {
     }
     func initCalcTodoGroup(){
         groupDic = Dictionary (
-                    grouping: showTodoList,
-                       by: {$0.groupName}
-                   )
+            grouping: showTodoList,
+            by: {$0.groupName}
+        )
         groupNameList = groupDic.keys.sorted()
         if(groupNameList.count>0){
             curGroupName=groupNameList[0]
@@ -43,16 +43,16 @@ class TodoManager: ObservableObject {
         
         
         groupDic = Dictionary (
-                    grouping: showTodoList,
-                       by: {$0.groupName}
-                   )
+            grouping: showTodoList,
+            by: {$0.groupName}
+        )
         groupNameList = groupDic.keys.sorted()
     }
     func addTodo(todo:Todo){
         todoList.append(todo)
         save()
     }
-
+    
     func removeTodo(index:Int){
         todoList.remove(at: index)
         save()
@@ -60,6 +60,17 @@ class TodoManager: ObservableObject {
     func updateTodo(index:Int , todo:Todo){
         todoList[index] = todo
         save()
+    }
+    func indexOfTodo(todo: Todo) -> Int {
+        var oneIndex : Int = 0
+        for oneTodo in todoList {
+            if ( oneTodo.id == todo.id)
+            {
+                break
+            }
+            oneIndex = oneIndex + 1
+        }
+        return oneIndex
     }
     
     func save(){
@@ -82,8 +93,6 @@ class TodoManager: ObservableObject {
                         return
                     }
                 }
-                
-                
             }
         } catch {
             print(error)

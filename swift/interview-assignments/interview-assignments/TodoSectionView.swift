@@ -14,13 +14,13 @@ struct TodoSectionView: View {
     let sectionCellCheckedChangedAction: ((Todo) -> Void)?
     
     var body: some View {
-       return Section(header: Text(groupName).font(.custom("PingFangSC-Regular", size: 16).weight(.bold)).foregroundColor(Color("ngtextback")))
+        return Section(header: Text(groupName).font(.custom("PingFangSC-Regular", size: 16).weight(.bold)).foregroundColor(Color("ngtextback")))
         {
             ForEach(sectionTodoList) { oneTodo in
                 TodoTVCell(todo:oneTodo, cellTextChangedAction: {
                     inputText in
                     sectionCellTextChangedAction?(oneTodo,inputText)
-           
+                    
                 }, cellCheckedChangedAction:{
                     oneTodo.checked.toggle()
                     sectionCellCheckedChangedAction?(oneTodo)
@@ -30,7 +30,7 @@ struct TodoSectionView: View {
         }
     }
     
-
+    
 }
 
 struct TodoSectionView_Previews: PreviewProvider {
@@ -43,7 +43,7 @@ struct TodoSectionView_Previews: PreviewProvider {
             }
         }, sectionCellCheckedChangedAction: {
             oneTodo in
-                todoList[0]=oneTodo
+            todoList[0]=oneTodo
         })
     }
 }
