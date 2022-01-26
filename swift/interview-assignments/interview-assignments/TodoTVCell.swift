@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+/// todocell class
+///
+/// todocell
+///
+///
 struct TodoTVCell: View {
     private let inputTipText : String = "Enter the information, otherwise this row will be deleted"
     @FocusState private  var isNameFocused:Bool

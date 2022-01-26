@@ -6,17 +6,20 @@
 //
 
 import SwiftUI
-
+/// SearchBar class
+///
+/// only show TextField
+///
+///
 struct SearchBar: View {
     var placeholder: String = "Search"
-    
+
     @Binding var text: String
     let searchTextChangedAction: ((String) -> Void)?
     var body: some View {
         HStack {
             TextField(self.placeholder,
-                      text: $text
-            ).onChange(of: text) { newValue in
+                      text: $text).onChange(of: text) { _ in
                 self.searchTextChangedAction?(text)
             }
             if text != "" {
@@ -40,8 +43,8 @@ struct SearchBar: View {
 struct SearchBar_Previews: PreviewProvider {
     static var previews: some View {
         SearchBar(text: .constant(""), searchTextChangedAction: {
-            searchText in
-            
+            _ in
+
         }).previewLayout(.fixed(width: 375, height: 60))
     }
 }

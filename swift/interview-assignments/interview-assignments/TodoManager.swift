@@ -5,71 +5,78 @@
 //  Created by never88gone on 2022/1/6.
 //
 
-import SwiftUI
 import Combine
-
+import SwiftUI
+/// todo tool manager class
+///
+/// todo manager
+///
+///
 class TodoManager: ObservableObject {
-    private let cacheFileName : String = "data"
-    private var todoList: [Todo] = [Todo]()
-    @Published var showTodoList: [Todo] = [Todo]()
-    @Published var groupDic : [String : [Todo]] = [String : [Todo]]()
-    @Published var groupNameList : [String] = [String]()
-    @Published var curGroupName : String = ""
+    private let cacheFileName: String = "data"
+    private var todoList: [Todo] = .init()
+    @Published var showTodoList: [Todo] = .init()
+    @Published var groupDic: [String: [Todo]] = .init()
+    @Published var groupNameList: [String] = .init()
+    @Published var curGroupName: String = ""
     
     init() {
         readFromFile()
         showTodoList = todoList
         initCalcTodoGroup()
     }
-    func initCalcTodoGroup(){
-        groupDic = Dictionary (
+
+    func initCalcTodoGroup() {
+        groupDic = Dictionary(
             grouping: showTodoList,
-            by: {$0.groupName}
+            by: { $0.groupName }
         )
         groupNameList = groupDic.keys.sorted()
-        if groupNameList.count>0 {
-            curGroupName=groupNameList[0]
-        }else {
+        if groupNameList.count > 0 {
+            curGroupName = groupNameList[0]
+        } else {
             curGroupName = ""
         }
     }
     
-    func calcTodoGroup(text: String){
+    func calcTodoGroup(text: String) {
         if text.count > 0 {
-            showTodoList = todoList.filter { (todo) -> Bool in
-                return todo.title.lowercased().contains(text.lowercased())
+            showTodoList = todoList.filter { todo -> Bool in
+                todo.title.lowercased().contains(text.lowercased())
             }
-        }else {
+        } else {
             showTodoList = todoList
         }
-    
-        groupDic = Dictionary (
+        
+        groupDic = Dictionary(
             grouping: showTodoList,
-            by: {$0.groupName}
+            by: { $0.groupName }
         )
         groupNameList = groupDic.keys.sorted()
         if groupNameList.count == 0 {
             curGroupName = ""
         }
     }
-    func addTodo(todo:Todo){
+    
+    func addTodo(todo: Todo) {
         todoList.append(todo)
         save()
     }
     
-    func removeTodo(index:Int){
+    func removeTodo(index: Int) {
         todoList.remove(at: index)
         save()
     }
-    func updateTodo(index:Int , todo:Todo){
+    
+    func updateTodo(index: Int, todo: Todo) {
         todoList[index] = todo
         save()
     }
+
     func indexOfTodo(todo: Todo) -> Int {
-        var oneIndex : Int = 0
+        var oneIndex = 0
         for oneTodo in todoList {
-            if ( oneTodo.id == todo.id)
-            {
+            if oneTodo.id == todo.id {
                 break
             }
             oneIndex = oneIndex + 1
@@ -77,7 +84,7 @@ class TodoManager: ObservableObject {
         return oneIndex
     }
     
-    func save(){
+    func save() {
         do {
             let jsonData = try JSONEncoder().encode(todoList)
             let jsonString = String(data: jsonData, encoding: .utf8)!
@@ -87,10 +94,11 @@ class TodoManager: ObservableObject {
             print(error)
         }
     }
-    func readFromFile(){
+
+    func readFromFile() {
         do {
             if let jsonStr = UserDefaults.standard.string(forKey: cacheFileName) {
-                if let  jsonData : Data = jsonStr.data(using: .utf8) {
+                if let jsonData: Data = jsonStr.data(using: .utf8) {
                     if let decodedSentences = try JSONDecoder().decode([Todo]?.self, from: jsonData) {
                         todoList = decodedSentences
                         print(decodedSentences)
@@ -101,20 +109,20 @@ class TodoManager: ObservableObject {
         } catch {
             print(error)
         }
-        todoList = [Todo(title: "Building Lists and Navigation",groupName:"SwiftUI Essentials"), Todo(title: "Creating and Combining Views",groupName:"SwiftUI Essentials"), Todo(title: "Hanline User Input",groupName:"SwiftUI Essentials"), Todo(title: "Animating Views and Transitions",groupName:"Drawing and Animation"), Todo(title: "Drawing Paths and Shapes",groupName:"Drawing and Animation")]
+        todoList = [Todo(title: "Building Lists and Navigation", groupName: "SwiftUI Essentials"), Todo(title: "Creating and Combining Views", groupName: "SwiftUI Essentials"), Todo(title: "Hanline User Input", groupName: "SwiftUI Essentials"), Todo(title: "Animating Views and Transitions", groupName: "Drawing and Animation"), Todo(title: "Drawing Paths and Shapes", groupName: "Drawing and Animation")]
     }
 }
 
-class Todo: Identifiable ,ObservableObject,Codable {
-    var id:  UUID = UUID()
+class Todo: Identifiable, ObservableObject, Codable {
+    var id: UUID = .init()
     var title: String = ""
     var groupName: String = ""
-    var checked : Bool=false
-    var disable : Bool=true
-    private  init() {
-    }
-    public  init(title: String,groupName: String = "") {
-        self.title=title
-        self.groupName=groupName
+    var checked: Bool = false
+    var disable: Bool = true
+    private init() {}
+
+    public init(title: String, groupName: String = "") {
+        self.title = title
+        self.groupName = groupName
     }
 }

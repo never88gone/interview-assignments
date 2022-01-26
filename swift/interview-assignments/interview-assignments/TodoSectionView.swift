@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+/// todogroupview class
+///
+/// todogroupview
+///
+///
 struct TodoSectionView: View {
     @State var  groupName : String
     var sectionTodoList : [Todo]
