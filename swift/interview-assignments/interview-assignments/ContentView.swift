@@ -33,28 +33,32 @@ struct ContentView: View {
                         }
                         TodoSectionView(groupName: oneKey, sectionTodoList: sectionSortedTodos, sectionCellTextChangedAction: { oneTodo, inputText in
                             if (inputText.count == 0) {
-                                let curIndex = self.todoManager.indexOfTodo(todo: oneTodo)
-                                self.todoManager.removeTodo(index: curIndex)
-                                self.todoManager.calcTodoGroup(text: self.curSearchTxt)
+                                withAnimation(.spring()) {
+                                    let curIndex = self.todoManager.indexOfTodo(todo: oneTodo)
+                                    self.todoManager.removeTodo(index: curIndex)
+                                    self.todoManager.calcTodoGroup(text: self.curSearchTxt)
+                                }
                             }
                         }, sectionCellCheckedChangedAction: {
                             oneTodo in
-                            let curIndex = self.todoManager.indexOfTodo(todo: oneTodo)
-                            self.todoManager.updateTodo(index: curIndex, todo: oneTodo)
-                            self.todoManager.calcTodoGroup(text: self.curSearchTxt)
+                            withAnimation(.spring()) {
+                                let curIndex = self.todoManager.indexOfTodo(todo: oneTodo)
+                                self.todoManager.updateTodo(index: curIndex, todo: oneTodo)
+                                self.todoManager.calcTodoGroup(text: self.curSearchTxt)
+                            }
                         })
-                        
-                        
                     }
-                }.listStyle(GroupedListStyle()).background(Color.blue)
+                }.listStyle(GroupedListStyle())
                 Spacer()
                 BottomInputView(groupNameList: self.todoManager.groupNameList, groupName: $todoManager.curGroupName, appendTodoAction : {
                     oneTitle, oneGroupName in
-                    self.todoManager.addTodo(todo: Todo(title: oneTitle, groupName: oneGroupName))
-                    self.todoManager.calcTodoGroup(text: self.curSearchTxt)
+                    withAnimation(.spring()) {
+                        self.todoManager.addTodo(todo: Todo(title: oneTitle, groupName: oneGroupName))
+                        self.todoManager.calcTodoGroup(text: self.curSearchTxt)
+                    }
                 }
                 )
-            }.navigationBarTitleDisplayMode(.large).navigationTitle(Text(self.navTile)).navigationBarItems(trailing : SearchBar(text: $curSearchTxt, searchTextChangedAction: {
+            }.background(Color("ngmainbackgroud")).navigationBarTitleDisplayMode(.large).navigationTitle(Text(self.navTile)).navigationBarItems(trailing : SearchBar(text: $curSearchTxt, searchTextChangedAction: {
                 searchText in
                 self.todoManager.calcTodoGroup(text: self.curSearchTxt)
             }).frame(width:150, height: 44).overlay(RoundedRectangle(cornerRadius: 15).stroke().fill(Color.blue)))

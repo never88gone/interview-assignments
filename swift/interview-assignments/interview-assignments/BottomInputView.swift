@@ -12,7 +12,7 @@ struct BottomInputView: View {
     @Binding  var  groupName : String
     @State private var inputText = ""
     @State private var  showingActionSheet = false
-    private  let   inputTipText = "add new..."
+    private  let   inputTipText = "Add new..."
     private  let   alertTitle = "Group Name"
     private  let   alertMessage = "Please Select Group Name"
     
@@ -30,7 +30,15 @@ struct BottomInputView: View {
         buttons.append(cancelButton)
         
         return HStack {
-            TextField(self.inputTipText, text:$inputText).frame(width: .infinity, height: 44).padding(EdgeInsets(top:0, leading:10, bottom: 0, trailing: 5)).background(Color.white).cornerRadius(10).fixedSize(horizontal: false, vertical: true).foregroundColor(Color("ngtextback")).padding(EdgeInsets(top:5, leading:10, bottom: 5, trailing: 10)).onSubmit {
+            TextField(self.inputTipText, text:$inputText).frame(width: .infinity, height: 44).padding(EdgeInsets(top:0, leading:10, bottom: 0, trailing: 5)).background(Color.white).overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(
+                        style: StrokeStyle(
+                            lineWidth: 1,
+                            dash: [5]
+                        )
+                    ).foregroundColor(self.groupNameList.count > 0 || self.groupName.count > 0  ? Color.clear : Color("ngtextgray"))
+            ).cornerRadius(10).fixedSize(horizontal: false, vertical: true).foregroundColor(Color("ngtextback")).padding(EdgeInsets(top:5, leading:10, bottom: 5, trailing: 10)).onSubmit {
                 self.appendTodoAction?(self.inputText,self.groupName)
             }
             if (self.groupNameList.count > 0 || self.groupName.count > 0){
@@ -46,14 +54,14 @@ struct BottomInputView: View {
                     )
                 }
             }
-        }.background(Color("ngmainbackgroud"))
+        }.background(Color.clear)
     }
 }
 
 struct BottomInputView_Previews: PreviewProvider {
     static var previews: some View {
-        let groupNameList = ["SwiftUI Essentials","Drawing and Animation"]
-        return BottomInputView(groupNameList: groupNameList,groupName : .constant(groupNameList[0]), appendTodoAction : {
+        let groupNameList :[String] = ["aaa"]
+        return BottomInputView(groupNameList: groupNameList,groupName : .constant("aaa"), appendTodoAction : {
             oneTitle, oneGroupName in
             
         }).previewLayout(.fixed(width: 375, height: 60))

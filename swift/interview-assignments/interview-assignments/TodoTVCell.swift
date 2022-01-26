@@ -13,6 +13,7 @@ struct TodoTVCell: View {
     @State  var todo:Todo
     var cellTextChangedAction: ((String) -> Void)?
     var cellCheckedChangedAction: (() -> Void)?
+    
     var body: some View {
         ZStack {
             HStack{
@@ -71,7 +72,7 @@ struct ToDoTVCell_Previews: PreviewProvider {
             }
         }, cellCheckedChangedAction:{
             todo.checked.toggle()
-        }).previewLayout(.fixed(width: 375, height: 50))
+        }).previewLayout(.fixed(width: 375, height: 100))
         
     }
 }
