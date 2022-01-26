@@ -11,13 +11,14 @@ struct TextFieldAlert<Presenting>: View where Presenting: View {
     @Binding var isShowing: Bool
     @State var showText: String = ""
     @Binding var text: String
+    
+    @State private var showToast: Bool = false
     let presenting: Presenting
+    var placeholder: String  = "Group Name"
+    var title: String = "Add Group Name"
+    @State private var toastMessage: String = "Group Name can't be empty"
     
-    @State var placeholder: String  = "Group Name"
-    @State var title: String = "Add Group Name"
-    
-    @State var showToast: Bool = false
-    @State var toastMessage: String = "Group Name can't be empty"
+   
     var body: some View {
         GeometryReader { (deviceSize: GeometryProxy) in
             ZStack {

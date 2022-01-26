@@ -27,8 +27,10 @@ class TodoManager: ObservableObject {
             by: {$0.groupName}
         )
         groupNameList = groupDic.keys.sorted()
-        if(groupNameList.count>0){
+        if groupNameList.count>0 {
             curGroupName=groupNameList[0]
+        }else {
+            curGroupName = ""
         }
     }
     
@@ -40,13 +42,15 @@ class TodoManager: ObservableObject {
         }else {
             showTodoList = todoList
         }
-        
-        
+    
         groupDic = Dictionary (
             grouping: showTodoList,
             by: {$0.groupName}
         )
         groupNameList = groupDic.keys.sorted()
+        if groupNameList.count == 0 {
+            curGroupName = ""
+        }
     }
     func addTodo(todo:Todo){
         todoList.append(todo)

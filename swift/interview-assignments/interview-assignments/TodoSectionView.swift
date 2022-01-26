@@ -14,23 +14,21 @@ struct TodoSectionView: View {
     let sectionCellCheckedChangedAction: ((Todo) -> Void)?
     
     var body: some View {
-        return Section(header: Text(groupName).font(.custom("PingFangSC-Regular", size: 16).weight(.bold)).foregroundColor(Color("ngtextback")))
+        return Section(header: Text(self.groupName).font(.custom("PingFangSC-Regular", size: 16).weight(.bold)).foregroundColor(Color("ngtextback")))
         {
-            ForEach(sectionTodoList) { oneTodo in
+            ForEach(self.sectionTodoList) { oneTodo in
                 TodoTVCell(todo:oneTodo, cellTextChangedAction: {
                     inputText in
-                    sectionCellTextChangedAction?(oneTodo,inputText)
+                    self.sectionCellTextChangedAction?(oneTodo,inputText)
                     
                 }, cellCheckedChangedAction:{
                     oneTodo.checked.toggle()
-                    sectionCellCheckedChangedAction?(oneTodo)
+                    self.sectionCellCheckedChangedAction?(oneTodo)
                 })
             }
             .listRowBackground(Color.clear)
         }
     }
-    
-    
 }
 
 struct TodoSectionView_Previews: PreviewProvider {

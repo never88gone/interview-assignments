@@ -14,10 +14,10 @@ struct SearchBar: View {
     let searchTextChangedAction: ((String) -> Void)?
     var body: some View {
         HStack {
-            TextField(placeholder,
+            TextField(self.placeholder,
                       text: $text
             ).onChange(of: text) { newValue in
-                searchTextChangedAction?(text)
+                self.searchTextChangedAction?(text)
             }
             if text != "" {
                 Image(systemName: "xmark.circle.fill")

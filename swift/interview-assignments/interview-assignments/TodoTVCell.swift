@@ -8,15 +8,16 @@
 import SwiftUI
 
 struct TodoTVCell: View {
-    @FocusState var isNameFocused:Bool
+    private let inputTipText : String = "Enter the information, otherwise this row will be deleted"
+    @FocusState private  var isNameFocused:Bool
     @State  var todo:Todo
-    let cellTextChangedAction: ((String) -> Void)?
-    let cellCheckedChangedAction: (() -> Void)?
+    var cellTextChangedAction: ((String) -> Void)?
+    var cellCheckedChangedAction: (() -> Void)?
     var body: some View {
         ZStack {
             HStack{
                 Group {
-                    if (todo.checked){
+                    if (self.todo.checked){
                         ZStack{
                             Image(systemName:"circle").resizable().frame(width: 30, height: 30).foregroundColor(Color("ngtextgray"))
                             Image(systemName: "circle.fill").resizable().frame(width: 15, height: 15).foregroundColor(Color("ngtextgray"))
@@ -25,33 +26,37 @@ struct TodoTVCell: View {
                         Image(systemName: "circle").resizable().frame(width: 30, height: 30, alignment: .center).foregroundColor(Color("ngtextgray"))
                     }
                 }.padding(.leading, 10.0).background(Color.clear).onTapGesture {
-                    cellCheckedChangedAction?()
+                    self.cellCheckedChangedAction?()
                 }
                 Group{
-                    if (!todo.checked){
-                        TextField("添加信息", text: $todo.title)
+                    if (!self.todo.checked){
+                        TextField(self.inputTipText, text: $todo.title)
                             .foregroundColor(Color("ngtextback"))
                             .textFieldStyle(PlainTextFieldStyle())
                             .focused($isNameFocused)
+                            .fixedSize(horizontal: false, vertical: true)
                             .onSubmit {
-                                isNameFocused = false
-                                cellTextChangedAction?(todo.title)
+                                self.isNameFocused = false
+                                self.cellTextChangedAction?(self.todo.title)
                             }
                     }else {
-                        Text(todo.title).strikethrough(true, color: Color("ngtextgray")).foregroundColor( Color("ngtextgray"))
+                        Text(self.todo.title).strikethrough(true, color: Color("ngtextgray")).foregroundColor( Color("ngtextgray"))
                     }
                 }.background(Color.clear).font(.custom("PingFangSC-Regular", size: 12).weight(.bold))
                 Spacer()
             }
-            if (todo.checked){
+            if (self.todo.checked){
                 ZStack{
                     Rectangle().frame(width: .infinity, height: 1, alignment:.center).padding().foregroundColor(Color("ngtextgraybackgroud"))
                     
                 }.frame(maxWidth: .infinity,maxHeight: .infinity).background(Color.init(red: 0, green: 0, blue: 0, opacity: 0.1)).allowsHitTesting(false)
             }
-        }.frame(minHeight:40,maxHeight: .infinity).background(Color.white).cornerRadius(10.0).padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing:5))      .gesture(LongPressGesture().onEnded { aaa in
-            isNameFocused = true
-        })
+        }.frame(minHeight:50,maxHeight: .infinity).background(Color.white).cornerRadius(10.0).padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing:5))
+            .onTapGesture{
+                
+            }.onLongPressGesture(minimumDuration: 3){
+                self.isNameFocused = true
+            }
     }
 }
 
