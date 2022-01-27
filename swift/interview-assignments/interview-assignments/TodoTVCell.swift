@@ -53,14 +53,14 @@ struct TodoTVCell: View {
             }
             if (self.todo.checked){
                 ZStack{
-                    Rectangle().frame(width: .infinity, height: 1, alignment:.center).padding().foregroundColor(Color("ngtextgraybackgroud"))
+                    Rectangle().frame(maxWidth: .infinity, maxHeight: 1, alignment:.center).padding().foregroundColor(Color("ngtextgraybackgroud"))
                     
                 }.frame(maxWidth: .infinity,maxHeight: .infinity).background(Color.init(red: 0, green: 0, blue: 0, opacity: 0.1)).allowsHitTesting(false)
             }
         }.frame(minHeight:50,maxHeight: .infinity).background(Color.white).cornerRadius(10.0).padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing:5))
             .onTapGesture{
                 
-            }.onLongPressGesture(minimumDuration: 3){
+            }.onLongPressGesture{
                 self.isNameFocused = true
             }
     }
