@@ -36,7 +36,6 @@ struct ContentView: View {
                                 withAnimation(.spring()) {
                                     let curIndex = self.todoManager.indexOfTodo(todo: oneTodo)
                                     self.todoManager.removeTodo(index: curIndex)
-                                    self.todoManager.calcTodoGroup(text: self.curSearchTxt)
                                 }
                             }
                         }, sectionCellCheckedChangedAction: {
@@ -44,7 +43,6 @@ struct ContentView: View {
                             withAnimation(.spring()) {
                                 let curIndex = self.todoManager.indexOfTodo(todo: oneTodo)
                                 self.todoManager.updateTodo(index: curIndex, todo: oneTodo)
-                                self.todoManager.calcTodoGroup(text: self.curSearchTxt)
                             }
                         })
                     }
@@ -54,13 +52,13 @@ struct ContentView: View {
                     oneTitle, oneGroupName in
                     withAnimation(.spring()) {
                         self.todoManager.addTodo(todo: Todo(title: oneTitle, groupName: oneGroupName))
-                        self.todoManager.calcTodoGroup(text: self.curSearchTxt)
                     }
                 }
                 )
             }.background(Color("ngmainbackgroud")).navigationBarTitleDisplayMode(.large).navigationTitle(Text(self.navTile)).navigationBarItems(trailing : SearchBar(text: $curSearchTxt, searchTextChangedAction: {
                 searchText in
-                self.todoManager.calcTodoGroup(text: self.curSearchTxt)
+                self.todoManager.searchText = self.curSearchTxt
+
             }).frame(width:150, height: 44).overlay(RoundedRectangle(cornerRadius: 15).stroke().fill(Color.blue)))
                 .navigationBarItems(leading: Button(action: {
                     withAnimation(Animation.easeInOut(duration: 1)) {

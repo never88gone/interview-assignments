@@ -14,68 +14,80 @@ import SwiftUI
 ///
 class TodoManager: ObservableObject {
     private let cacheFileName: String = "data"
-    private var todoList: [Todo] = .init()
+    @Published var todoList: [Todo] = .init()
     @Published var showTodoList: [Todo] = .init()
     @Published var groupDic: [String: [Todo]] = .init()
     @Published var groupNameList: [String] = .init()
     @Published var curGroupName: String = ""
-    
+    @Published var searchText: String = ""
+    private var cancellables = Set<AnyCancellable>()
     init() {
-        readFromFile()
-        showTodoList = todoList
-        initCalcTodoGroup()
+        self.initData()
     }
 
-    func initCalcTodoGroup() {
-        groupDic = Dictionary(
-            grouping: showTodoList,
-            by: { $0.groupName }
-        )
-        groupNameList = groupDic.keys.sorted()
-        if groupNameList.count > 0 {
-            curGroupName = groupNameList[0]
-        } else {
-            curGroupName = ""
-        }
+    private func initData() {
+        self.todoList = self.readFromFile()
+        self.$todoList.sink { newTodoList in
+            self.freshList(newTodoList: newTodoList)
+        }.store(in: &self.cancellables)
+        self.$searchText.sink { newText in
+            self.freshList(newText: newText)
+        }.store(in: &self.cancellables)
     }
     
-    func calcTodoGroup(text: String) {
-        if text.count > 0 {
-            showTodoList = todoList.filter { todo -> Bool in
-                todo.title.lowercased().contains(text.lowercased())
+    private func freshList(newTodoList: [Todo]) {
+        if self.searchText.count > 0 {
+            self.showTodoList = newTodoList.filter { todo -> Bool in
+                todo.title.lowercased().contains(self.searchText.lowercased())
             }
         } else {
-            showTodoList = todoList
+            self.showTodoList = newTodoList
         }
-        
-        groupDic = Dictionary(
-            grouping: showTodoList,
-            by: { $0.groupName }
-        )
-        groupNameList = groupDic.keys.sorted()
-        if groupNameList.count == 0 {
-            curGroupName = ""
-        }
-    }
-    
-    func addTodo(todo: Todo) {
-        todoList.append(todo)
-        save()
-    }
-    
-    func removeTodo(index: Int) {
-        todoList.remove(at: index)
-        save()
-    }
-    
-    func updateTodo(index: Int, todo: Todo) {
-        todoList[index] = todo
-        save()
+        self.calcGroup()
     }
 
-    func indexOfTodo(todo: Todo) -> Int {
+    private func freshList(newText: String) {
+        if newText.count > 0 {
+            self.showTodoList = self.todoList.filter { todo -> Bool in
+                todo.title.lowercased().contains(newText.lowercased())
+            }
+        } else {
+            self.showTodoList = self.todoList
+        }
+        self.calcGroup()
+    }
+    
+    private func calcGroup() {
+        self.groupDic = Dictionary(
+            grouping: self.showTodoList,
+            by: { $0.groupName }
+        )
+        self.groupNameList = self.groupDic.keys.sorted()
+        if self.groupNameList.count > 0, self.curGroupName == "" {
+            self.curGroupName = self.groupNameList[0]
+        } else if self.groupNameList.count == 0 {
+            self.curGroupName = ""
+        }
+    }
+    
+    public func addTodo(todo: Todo) {
+        self.todoList.append(todo)
+        self.save()
+    }
+    
+    public func removeTodo(index: Int) {
+        self.todoList.remove(at: index)
+        self.save()
+    }
+    
+    public func updateTodo(index: Int, todo: Todo) {
+        self.todoList[index] = todo
+        self.save()
+    }
+
+    public func indexOfTodo(todo: Todo) -> Int {
         var oneIndex = 0
-        for oneTodo in todoList {
+        for oneTodo in self.todoList {
             if oneTodo.id == todo.id {
                 break
             }
@@ -84,32 +96,32 @@ class TodoManager: ObservableObject {
         return oneIndex
     }
     
-    func save() {
+    private func save() {
         do {
-            let jsonData = try JSONEncoder().encode(todoList)
+            let jsonData = try JSONEncoder().encode(self.todoList)
             let jsonString = String(data: jsonData, encoding: .utf8)!
-            UserDefaults.standard.set(jsonString, forKey: cacheFileName)
+            UserDefaults.standard.set(jsonString, forKey: self.cacheFileName)
             UserDefaults.standard.synchronize()
         } catch {
             print(error)
         }
     }
 
-    func readFromFile() {
+    private func readFromFile() -> [Todo] {
         do {
-            if let jsonStr = UserDefaults.standard.string(forKey: cacheFileName) {
+            if let jsonStr = UserDefaults.standard.string(forKey: self.cacheFileName) {
                 if let jsonData: Data = jsonStr.data(using: .utf8) {
                     if let decodedSentences = try JSONDecoder().decode([Todo]?.self, from: jsonData) {
-                        todoList = decodedSentences
-                        print(decodedSentences)
-                        return
+                        let tempTodoList: [Todo] = decodedSentences
+                        return tempTodoList
                     }
                 }
             }
         } catch {
             print(error)
         }
-        todoList = [Todo(title: "Building Lists and Navigation", groupName: "SwiftUI Essentials"), Todo(title: "Creating and Combining Views", groupName: "SwiftUI Essentials"), Todo(title: "Hanline User Input", groupName: "SwiftUI Essentials"), Todo(title: "Animating Views and Transitions", groupName: "Drawing and Animation"), Todo(title: "Drawing Paths and Shapes", groupName: "Drawing and Animation")]
+        let tempTodoList = [Todo(title: "Building Lists and Navigation", groupName: "SwiftUI Essentials"), Todo(title: "Creating and Combining Views", groupName: "SwiftUI Essentials"), Todo(title: "Hanline User Input", groupName: "SwiftUI Essentials"), Todo(title: "Animating Views and Transitions", groupName: "Drawing and Animation"), Todo(title: "Drawing Paths and Shapes", groupName: "Drawing and Animation")]
+        return tempTodoList
     }
 }
 

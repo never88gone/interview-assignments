@@ -13,7 +13,7 @@ import SwiftUI
 ///
 ///
 struct TodoTVCell: View {
-    private let inputTipText : String = "Enter the information, otherwise this row will be deleted"
+    private let inputTipText : String = "Enter text, otherwise this row will be deleted"
     @FocusState private  var isNameFocused:Bool
     @State  var todo:Todo
     var cellTextChangedAction: ((String) -> Void)?
