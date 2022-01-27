@@ -11,11 +11,13 @@ struct TextFieldAlert<Presenting>: View where Presenting: View {
     @Binding var isShowing: Bool
     @State var showText: String = ""
     @Binding var text: String
+    @FocusState private  var isNameFocused:Bool
     
-    @State private var showToast: Bool = false
     let presenting: Presenting
     var placeholder: String  = "Group Name"
     var title: String = "Add Group Name"
+    
+    @State private var showToast: Bool = false
     @State private var toastMessage: String = "Group Name can't be empty"
     
    
@@ -34,6 +36,7 @@ struct TextFieldAlert<Presenting>: View where Presenting: View {
                             Spacer()
                             Button(action: {
                                 withAnimation {
+                                    self.isNameFocused = false
                                     self.isShowing.toggle()
                                 }
                             }) {
@@ -44,13 +47,14 @@ struct TextFieldAlert<Presenting>: View where Presenting: View {
                     }.frame(maxWidth: .infinity, maxHeight: .infinity)
                     VStack {
                         Text(self.title).foregroundColor(Color("ngtextback"))
-                        TextField(placeholder, text: $showText)
+                        TextField(placeholder, text: $showText).focused($isNameFocused)
                         Divider()
                         HStack {
                             Button(action: {
                                 if (self.showText.count > 0){
                                     self.text=self.showText
                                     self.isShowing.toggle()
+                                    self.isNameFocused = false
                                 }else {
                                     withAnimation(Animation.easeInOut(duration: 0.5)) {
                                         self.showToast = true

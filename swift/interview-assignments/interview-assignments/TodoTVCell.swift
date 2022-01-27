@@ -41,10 +41,11 @@ struct TodoTVCell: View {
                             .textFieldStyle(PlainTextFieldStyle())
                             .focused($isNameFocused)
                             .fixedSize(horizontal: false, vertical: true)
-                            .onSubmit {
-                                self.isNameFocused = false
-                                self.cellTextChangedAction?(self.todo.title)
-                            }
+                            .onChange(of: isNameFocused, perform: { newValue in
+                                if (!newValue) {
+                                    self.cellTextChangedAction?(self.todo.title)
+                                }
+                            })
                     }else {
                         Text(self.todo.title).strikethrough(true, color: Color("ngtextgray")).foregroundColor( Color("ngtextgray"))
                     }

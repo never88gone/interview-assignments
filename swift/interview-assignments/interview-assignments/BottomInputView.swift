@@ -30,7 +30,7 @@ struct BottomInputView: View {
         buttons.append(cancelButton)
         
         return HStack {
-            TextField(self.inputTipText, text:$inputText).frame(maxWidth: .infinity, maxHeight: 44).padding(EdgeInsets(top:0, leading:10, bottom: 0, trailing: 5)).background(Color.white).overlay(
+            TextField(self.inputTipText, text:$inputText).frame(maxWidth: .infinity, idealHeight:  44).padding(EdgeInsets(top:0, leading:10, bottom: 0, trailing: 5)).background(Color.white).overlay(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(
                         style: StrokeStyle(

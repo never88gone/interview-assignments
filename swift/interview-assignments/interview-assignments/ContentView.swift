@@ -15,16 +15,26 @@ struct ContentView: View {
     @State  private  var  showAlert : Bool = false
     @State private var  curGroupName : String = ""
     @State private var  curSearchTxt : String = ""
+    
+    @State private var showToast: Bool = false
+    @State private var toastMessage: String = "Group Name can't be empty"
+    
     @StateObject var todoManager: TodoManager = TodoManager()
     private  let navTile : String = "List"
     init(){
+        UINavigationBar.appearance().backgroundColor = UIColor.init(named: "ngmainbackgroud")
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.init(red: 55/255, green: 59/255, blue: 81.0/255, alpha: 1)]
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.init(red: 55/255, green: 59/255, blue: 81.0/255, alpha: 1)]
+        
         UITableView.appearance().separatorColor = UIColor.clear
+        UITableView.appearance().backgroundColor =  UIColor.init(named: "ngmainbackgroud")
     }
     
     
     var body: some View {
         
         return  NavigationView{
+            ZStack {
             VStack {
                 List {
                     ForEach(self.todoManager.groupNameList, id: \.self ) { oneKey in
@@ -50,9 +60,21 @@ struct ContentView: View {
                 Spacer()
                 BottomInputView(groupNameList: self.todoManager.groupNameList, groupName: $todoManager.curGroupName, appendTodoAction : {
                     oneTitle, oneGroupName in
-                    withAnimation(.spring()) {
-                        self.todoManager.addTodo(todo: Todo(title: oneTitle, groupName: oneGroupName))
+                    if oneGroupName.count != 0 {
+                        withAnimation(.spring()) {
+                            self.todoManager.addTodo(todo: Todo(title: oneTitle, groupName: oneGroupName))
+                        }
+                    }else  {
+                        withAnimation(Animation.easeInOut(duration: 0.5)) {
+                            self.showToast = true
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            withAnimation(Animation.easeInOut(duration: 0.5)) {
+                                self.showToast = false
+                            }
+                        }
                     }
+                    
                 }
                 )
             }.background(Color("ngmainbackgroud")).navigationBarTitleDisplayMode(.large).navigationTitle(Text(self.navTile)).navigationBarItems(trailing : SearchBar(text: $curSearchTxt, searchTextChangedAction: {
@@ -68,6 +90,13 @@ struct ContentView: View {
                     Image(systemName:"rectangle.stack.badge.plus").resizable().frame(width: 30, height: 30).foregroundColor(Color.blue)
                     
                 })
+                VStack {
+                    Spacer()
+                    Text(self.toastMessage).font(.custom("PingFangSC-Regular", size: 12)).padding().foregroundColor(.white)
+                        .background(RoundedRectangle(cornerRadius: 15).fill(.black)).padding(EdgeInsets(top: 5, leading: 5, bottom: 100, trailing:5))
+                }.opacity(self.showToast ? 1 : 0)
+            }
+ 
         }.edgesIgnoringSafeArea(.all).textFieldAlert(isShowing: $showAlert, text: $todoManager.curGroupName)
     }
 }
