@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct interview_assignmentsApp: App {
     var body: some Scene {
-       return  WindowGroup {
+        return WindowGroup {
             ContentView()
         }
     }

@@ -32,7 +32,6 @@ struct TextFieldAlert<Presenting>: View where Presenting: View {
                         HStack {
                             Spacer()
                             Button(action: {
-                                self.text = self.showText
                                 self.showText = ""
                                 withAnimation {
                                     self.isNameFocused = false
