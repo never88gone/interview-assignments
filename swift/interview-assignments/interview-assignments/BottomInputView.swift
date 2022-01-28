@@ -39,6 +39,7 @@ struct BottomInputView: View {
                         )
                     ).foregroundColor(self.groupNameList.count > 0 || self.groupName.count > 0  ? Color.clear : Color("ngtextgray"))
             ).cornerRadius(10).fixedSize(horizontal: false, vertical: true).foregroundColor(Color("ngtextback")).padding(EdgeInsets(top:5, leading:10, bottom: 5, trailing: 10)).onSubmit {
+                
                 self.appendTodoAction?(self.inputText,self.groupName)
             }
             if (self.groupNameList.count > 0 || self.groupName.count > 0){

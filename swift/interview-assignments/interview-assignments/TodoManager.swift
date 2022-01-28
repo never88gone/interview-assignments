@@ -12,7 +12,8 @@ import SwiftUI
 /// todo manager
 ///
 ///
-class TodoManager: ObservableObject {
+class TodoManager:NSObject, ObservableObject {
+    
     private let cacheFileName: String = "data"
     @Published var todoList: [Todo] = .init()
     @Published var showTodoList: [Todo] = .init()
@@ -21,9 +22,30 @@ class TodoManager: ObservableObject {
     @Published var curGroupName: String = ""
     @Published var searchText: String = ""
     private var cancellables = Set<AnyCancellable>()
-    init() {
+    
+    
+    static let shared = TodoManager()
+    
+    // Make sure the class has only one instance
+    // Should not init or copy outside
+    private override init() {
+        super.init()
         self.initData()
     }
+    
+    override func copy() -> Any {
+        return self // SingletonClass.shared
+    }
+    
+    override func mutableCopy() -> Any {
+        return self // SingletonClass.shared
+    }
+    
+    // Optional
+    func reset() {
+        // Reset all properties to default value
+    }
+
 
     private func initData() {
         self.todoList = self.readFromFile()

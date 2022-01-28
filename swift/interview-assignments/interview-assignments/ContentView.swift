@@ -19,7 +19,7 @@ struct ContentView: View {
     @State private var showToast: Bool = false
     @State private var toastMessage: String = "Group Name can't be empty"
     
-    @StateObject var todoManager: TodoManager = TodoManager()
+    @StateObject var todoManager: TodoManager = TodoManager.shared
     private  let navTile : String = "List"
     init(){
         UINavigationBar.appearance().backgroundColor = UIColor.init(named: "ngmainbackgroud")

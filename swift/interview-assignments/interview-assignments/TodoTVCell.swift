@@ -60,7 +60,7 @@ struct TodoTVCell: View {
             }
         }.frame(minHeight:50,maxHeight: .infinity).background(Color.white).cornerRadius(10.0).padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing:5))
             .onTapGesture{
-                
+                self.isNameFocused = false
             }.onLongPressGesture{
                 self.isNameFocused = true
             }
